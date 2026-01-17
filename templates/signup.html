@@ -1,11 +1,308 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up - LoanShield</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
+
+    <style>
+
+        /* --------------------------------------
+            PREMIUM ANIMATED BACKGROUND
+        ---------------------------------------*/
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+
+            font-family: "Poppins", sans-serif;
+
+            background: linear-gradient(135deg, #f8f4ef, #f3ebe3, #f7f2e8);
+            background-size: 400% 400%;
+            animation: bgShift 15s ease infinite;
+        }
+
+        @keyframes bgShift {
+            0%   { background-position: 0% 50%; }
+            50%  { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+
+        /* --------------------------------------
+            SIGNUP CARD
+        ---------------------------------------*/
+        .auth-card {
+            width: 390px;
+            max-width: 90%;
+            padding: 40px;
+            border-radius: 22px;
+
+            background: rgba(255,255,255,0.70);
+            backdrop-filter: blur(18px);
+
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+
+            animation: fadeUp 0.7s ease;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin: 40px 20px;
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* soft glow */
+        .auth-card::after {
+            content: "";
+            position: absolute;
+            top: -25px;
+            right: -25px;
+            width: 190px;
+            height: 190px;
+            background: radial-gradient(circle,
+                      rgba(255,255,255,0.45),
+                      transparent 70%);
+            border-radius: 50%;
+            filter: blur(10px);
+            z-index: 0;
+        }
+
+        .auth-card > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-card h2 {
+            font-size: 32px;
+            margin-bottom: 25px;
+            font-weight: 700;
+            color: #6A4C36;
+            animation: glowText 3s ease-in-out infinite;
+        }
+
+        @keyframes glowText {
+            0%,100% { text-shadow: 0 0 0px rgba(199,162,124,0.25); }
+            50%     { text-shadow: 0 0 12px rgba(199,162,124,0.45); }
+        }
+
+        .auth-card label {
+            float: left;
+            font-size: 14px;
+            font-weight: 600;
+            color: #4f433c;
+            margin-top: 14px;
+        }
+
+        .auth-card input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+
+            border: 1px solid #d4c8bb;
+            background: #faf7f2;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: 0.25s;
+            font-family: "Poppins", sans-serif;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .auth-card input:focus {
+            border-color: #c7a27c;
+            box-shadow: 0 0 0 4px rgba(199,162,124,0.25);
+        }
+
+        .auth-card button {
+            margin-top: 28px;
+            width: 100%;
+            padding: 13px;
+
+            font-size: 17px;
+            border: none;
+            border-radius: 12px;
+
+            background: #C7A27C;
+            color: white;
+            font-weight: 600;
+
+            cursor: pointer;
+            transition: 0.3s ease;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .auth-card button:hover {
+            background: #b48b65;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+        }
+
+        .auth-card button:active {
+            transform: translateY(-1px);
+        }
+
+        .error {
+            padding: 12px;
+            background: #ffd4d4;
+            color: #b92828;
+            border-radius: 10px;
+            font-size: 14px;
+            margin-bottom: 15px;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%,100% { transform: translateX(0); }
+            25%  { transform: translateX(-4px); }
+            50%  { transform: translateX(4px); }
+            75%  { transform: translateX(-4px); }
+        }
+
+        .login-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #6A4C36;
+            line-height: 1.5;
+        }
+
+        .login-link a {
+            color: #C7A27C;
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .login-link a:hover {
+            color: #b48b65;
+            text-decoration: underline;
+        }
+
+        /* --------------------------------------
+           MOBILE FIXES - TABLET
+        ---------------------------------------*/
+        @media(max-width: 768px){
+            .auth-card {
+                width: 85% !important;
+                max-width: 420px !important;
+                padding: 35px !important;
+                margin: 30px 20px !important;
+            }
+
+            .auth-card h2 {
+                font-size: 28px !important;
+            }
+
+            .auth-card input {
+                padding: 11px !important;
+                font-size: 14px !important;
+            }
+
+            .auth-card button {
+                font-size: 16px !important;
+                padding: 12px !important;
+            }
+
+            .login-link {
+                font-size: 13px !important;
+            }
+        }
+
+        /* --------------------------------------
+           MOBILE FIXES - PHONE
+        ---------------------------------------*/
+        @media(max-width: 600px){
+            body {
+                min-height: 100vh !important;
+                padding: 20px 0 !important;
+            }
+
+            .auth-card {
+                width: 90% !important;
+                max-width: 380px !important;
+                padding: 32px 25px !important;
+                margin: 30px 15px !important;
+                border-radius: 18px !important;
+            }
+
+            .auth-card h2 {
+                font-size: 26px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .auth-card label {
+                font-size: 13px !important;
+                margin-top: 12px !important;
+            }
+
+            .auth-card input {
+                padding: 11px !important;
+                font-size: 14px !important;
+                border-radius: 8px !important;
+            }
+
+            .auth-card button {
+                margin-top: 22px !important;
+                padding: 12px !important;
+                font-size: 15px !important;
+                border-radius: 10px !important;
+            }
+
+            .error {
+                padding: 10px !important;
+                font-size: 13px !important;
+            }
+
+            .login-link {
+                margin-top: 18px !important;
+                font-size: 13px !important;
+            }
+        }
+
+        /* --------------------------------------
+           MOBILE FIXES - SMALL PHONES
+        ---------------------------------------*/
+        @media(max-width: 400px){
+            .auth-card {
+                width: 92% !important;
+                padding: 28px 20px !important;
+                margin: 25px 10px !important;
+            }
+
+            .auth-card h2 {
+                font-size: 24px !important;
+            }
+
+            .auth-card label {
+                font-size: 12px !important;
+            }
+
+            .auth-card input {
+                padding: 10px !important;
+                font-size: 13px !important;
+            }
+
+            .auth-card button {
+                padding: 11px !important;
+                font-size: 14px !important;
+            }
+
+            .login-link {
+                font-size: 12px !important;
+            }
+        }
+
+    </style>
 </head>
 
-<body style="justify-content:center;align-items:center;">
+<body>
 
 <div class="auth-card">
     <h2>Sign Up</h2>
@@ -24,9 +321,11 @@
         <button type="submit">Create Account</button>
     </form>
 
-    <p style="text-align:center;">Already have an account? <a href="/login">Login</a></p>
-
+    <p class="login-link">Already have an account? <a href="/login">Login</a></p>
 </div>
+
+<!-- ⭐ FOOTER INCLUDED HERE ⭐ -->
+{% include 'footer.html' %}
 
 </body>
 </html>
