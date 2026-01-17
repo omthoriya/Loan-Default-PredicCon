@@ -79,7 +79,33 @@ def init_db():
     except Exception as e:
         print(f"⚠️ Database initialization error: {e}")
 
+def migrate_db():
+    """Add username column to existing history table if it doesn't exist"""
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
+        
+        # Check if username column exists
+        c.execute("PRAGMA table_info(history)")
+        columns = [column[1] for column in c.fetchall()]
+        
+        if 'username' not in columns:
+            print("🔧 Migrating database - adding username column...")
+            # Add username column
+            c.execute("ALTER TABLE history ADD COLUMN username TEXT")
+            # Set all existing records to 'admin' (or NULL)
+            c.execute("UPDATE history SET username = 'admin' WHERE username IS NULL")
+            conn.commit()
+            print("✅ Database migration completed!")
+        else:
+            print("✅ Database already up to date")
+        
+        conn.close()
+    except Exception as e:
+        print(f"⚠️ Migration error: {e}")
+
 init_db()
+migrate_db()
 
 
 # -------------------------------------------------
@@ -158,6 +184,7 @@ def signup():
             return render_template("signup.html", error=f"An error occurred: {str(e)}")
 
     return render_template("signup.html")
+
 
 
 @app.route("/logout")
