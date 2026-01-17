@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoanShield - Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=5">
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
 
     <style>
 
@@ -28,7 +28,7 @@
         --------------------------------------- */
         .result-container {
             max-width: 650px;
-            margin: 150px auto 120px auto; /* extra bottom for footer */
+            margin: 150px auto 80px auto;
             text-align: center;
             animation: fadeIn 0.8s ease;
             padding: 0 22px;
@@ -64,6 +64,12 @@
             background: radial-gradient(circle, rgba(255,255,255,0.55), transparent 70%);
             filter: blur(12px);
             border-radius: 50%;
+            z-index: 0;
+        }
+
+        .result-card > * {
+            position: relative;
+            z-index: 1;
         }
 
         /* Safe / Danger themes */
@@ -90,6 +96,18 @@
             50%      { transform: translateY(-12px); }
         }
 
+        .result-card h1 {
+            font-size: 28px;
+            margin: 15px 0;
+            line-height: 1.3;
+        }
+
+        .result-card p {
+            font-size: 16px;
+            margin: 10px 0;
+            line-height: 1.5;
+        }
+
         /* --------------------------------------
            BUTTONS
         --------------------------------------- */
@@ -107,6 +125,7 @@
             font-weight: 600;
             text-decoration: none;
             transition: 0.25s ease;
+            display: inline-block;
         }
 
         .btn-primary {
@@ -122,6 +141,7 @@
         .btn-secondary {
             border: 2px solid #C7A27C;
             color: #C7A27C;
+            background: transparent;
         }
         .btn-secondary:hover {
             background: #C7A27C;
@@ -130,51 +150,111 @@
         }
 
         /* --------------------------------------
-           MOBILE FIXES
+           MOBILE FIXES - TABLET
         --------------------------------------- */
-        @media(max-width: 700px){
+        @media(max-width: 768px){
             .result-container {
-                margin-top: 140px;
-                margin-bottom: 160px; /* EXTRA SAFE for mobile footer */
+                margin-top: 130px !important;
+                margin-bottom: 60px !important;
+                padding: 0 20px !important;
             }
-        }
-
-        @media(max-width: 600px){
 
             .result-card {
-                padding: 32px 20px !important;
+                padding: 40px 30px !important;
             }
 
             .emoji {
-                font-size: 70px;
+                font-size: 80px !important;
             }
 
-            h1 {
-                font-size: 22px;
-                line-height: 1.35;
+            .result-card h1 {
+                font-size: 24px !important;
             }
 
-            p {
-                font-size: 14px;
-            }
-
-            .action-buttons {
-                gap: 12px;
-            }
-
-            .btn {
-                padding: 12px 22px;
-                width: 100%;
-                max-width: 280px;
+            .result-card p {
+                font-size: 15px !important;
             }
         }
 
+        /* --------------------------------------
+           MOBILE FIXES - PHONE
+        --------------------------------------- */
+        @media(max-width: 600px){
 
-        /* Fix for very small phones (Galaxy Fold, iPhone SE) */
-        @media(max-width: 360px){
-            .emoji { font-size: 60px; }
-            h1 { font-size: 20px; }
-            .result-card { padding: 25px 16px; }
+            .result-container {
+                margin-top: 120px !important;
+                margin-bottom: 50px !important;
+                padding: 0 18px !important;
+            }
+
+            .result-card {
+                padding: 35px 22px !important;
+                border-radius: 18px !important;
+            }
+
+            .emoji {
+                font-size: 70px !important;
+                margin-bottom: 12px !important;
+            }
+
+            .result-card h1 {
+                font-size: 22px !important;
+                line-height: 1.35 !important;
+                margin: 12px 0 !important;
+            }
+
+            .result-card p {
+                font-size: 14px !important;
+                line-height: 1.5 !important;
+                margin: 10px 0 !important;
+            }
+
+            .action-buttons {
+                margin-top: 25px !important;
+                gap: 12px !important;
+                flex-direction: column !important;
+                align-items: center !important;
+            }
+
+            .btn {
+                padding: 12px 24px !important;
+                width: 100% !important;
+                max-width: 300px !important;
+                font-size: 15px !important;
+                text-align: center !important;
+            }
+        }
+
+        /* --------------------------------------
+           MOBILE FIXES - SMALL PHONES
+        --------------------------------------- */
+        @media(max-width: 400px){
+            
+            .result-container {
+                margin-top: 110px !important;
+                padding: 0 15px !important;
+            }
+
+            .result-card {
+                padding: 30px 18px !important;
+            }
+
+            .emoji { 
+                font-size: 60px !important; 
+            }
+            
+            .result-card h1 { 
+                font-size: 20px !important; 
+            }
+
+            .result-card p {
+                font-size: 13px !important;
+            }
+
+            .btn {
+                padding: 11px 20px !important;
+                font-size: 14px !important;
+            }
         }
 
     </style>
@@ -212,4 +292,3 @@
 
 </body>
 </html>
-
