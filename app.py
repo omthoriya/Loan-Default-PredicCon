@@ -3,19 +3,24 @@ import joblib
 import sqlite3
 import pandas as pd
 import os
+import sys
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "loan_secret_key_123"
 
+print("🚀 Starting Flask app...")
+print(f"📂 Current directory: {os.getcwd()}")
+print(f"📂 Files in directory: {os.listdir('.')}")
 
 # -------------------------------------------------
 # LOAD ML MODEL SAFELY
 # -------------------------------------------------
 try:
     model = joblib.load("loan_model.pkl")
-except:
+    print("✅ Model loaded successfully!")
+except Exception as e:
     model = None
-    print("⚠️ MODEL FAILED TO LOAD — Check loan_model.pkl")
+    print(f"⚠️ MODEL FAILED TO LOAD: {e}")
 
 
 # -------------------------------------------------
@@ -24,41 +29,45 @@ except:
 DB_NAME = "database.db"
 
 def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
+    try:
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
 
-    # USERS TABLE
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS users (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            username TEXT UNIQUE,
-            password TEXT
-        )
-    """)
+        # USERS TABLE
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS users (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE,
+                password TEXT
+            )
+        """)
 
-    # DEFAULT ADMIN
-    c.execute("SELECT * FROM users WHERE username=?", ("admin",))
-    if not c.fetchone():
-        c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
-                  ("admin", "12345"))
+        # DEFAULT ADMIN
+        c.execute("SELECT * FROM users WHERE username=?", ("admin",))
+        if not c.fetchone():
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+                      ("admin", "12345"))
 
-    # HISTORY TABLE
-    c.execute("""
-        CREATE TABLE IF NOT EXISTS history (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            age REAL,
-            income REAL,
-            loan_amount REAL,
-            credit_score REAL,
-            dti_ratio REAL,
-            education TEXT,
-            employment TEXT,
-            prediction INTEGER
-        )
-    """)
+        # HISTORY TABLE
+        c.execute("""
+            CREATE TABLE IF NOT EXISTS history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                age REAL,
+                income REAL,
+                loan_amount REAL,
+                credit_score REAL,
+                dti_ratio REAL,
+                education TEXT,
+                employment TEXT,
+                prediction INTEGER
+            )
+        """)
 
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
+        print("✅ Database initialized successfully!")
+    except Exception as e:
+        print(f"⚠️ Database initialization error: {e}")
 
 init_db()
 
@@ -255,9 +264,10 @@ def send_message():
 
 
 # -------------------------------------------------
-# -------------------------------------------------
 # RUN SERVER
 # -------------------------------------------------
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
+    print(f"🌐 Starting server on port {port}...")
+    sys.stdout.flush()
     app.run(host="0.0.0.0", port=port, debug=False)
