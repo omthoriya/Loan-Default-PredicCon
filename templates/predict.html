@@ -29,19 +29,20 @@
         ------------------------------------------ */
         .input-group {
             position: relative;
-            margin-bottom: 22px;
+            margin-bottom: 28px;
         }
 
         .input-group input,
         .input-group select {
             width: 100%;
-            padding: 14px;
+            padding: 14px 14px 10px 14px;
             border-radius: 10px;
             border: 1px solid #d8cfc5;
             background: #faf7f2;
             font-size: 15px;
             outline: none;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-sizing: border-box;
         }
 
         .input-group input:focus,
@@ -54,10 +55,9 @@
 
         .input-group label {
             position: absolute;
-            top: 50%;
+            top: 15px;
             left: 14px;
-            transform: translateY(-50%);
-            background: white;
+            background: transparent;
             padding: 0 6px;
             color: #7a6f69;
             font-size: 14px;
@@ -72,6 +72,7 @@
             font-size: 12px;
             color: #C7A27C;
             font-weight: 600;
+            background: white;
         }
 
         .input-group select:focus + label,
@@ -81,6 +82,7 @@
             font-size: 12px;
             color: #C7A27C;
             font-weight: 600;
+            background: white;
         }
 
 
@@ -227,7 +229,7 @@
             }
 
             .form-card {
-                padding: 25px !important;
+                padding: 25px 20px !important;
                 max-width: 100% !important;
             }
 
@@ -235,19 +237,37 @@
                 max-width: 280px !important;
             }
 
+            .input-group {
+                margin-bottom: 24px !important;
+            }
+
             .input-group input,
             .input-group select {
-                padding: 12px !important;
+                padding: 13px 12px 9px 12px !important;
                 font-size: 14px !important;
             }
 
             .input-group label {
                 font-size: 13px !important;
+                left: 12px !important;
+                top: 13px !important;
+            }
+
+            .input-group input:focus + label,
+            .input-group input:not(:placeholder-shown) + label,
+            .input-group select:focus + label,
+            .input-group select.filled + label {
+                font-size: 11px !important;
+                top: -7px !important;
             }
 
             .btn-primary {
                 padding: 12px 20px !important;
                 font-size: 15px !important;
+            }
+
+            .form-grid {
+                gap: 0 !important;
             }
         }
 
