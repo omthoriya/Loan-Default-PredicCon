@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoanShield - Predict Risk</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=12">
 
     <style>
 
@@ -25,7 +25,7 @@
 
 
         /* -----------------------------------------
-           FLOATING INPUTS 
+           FLOATING INPUTS WITH ENHANCED EFFECTS
         ------------------------------------------ */
         .input-group {
             position: relative;
@@ -41,7 +41,15 @@
             background: #faf7f2;
             font-size: 15px;
             outline: none;
-            transition: 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            border-color: #C7A27C;
+            box-shadow: 0 0 0 4px rgba(199,162,124,0.15);
+            transform: translateY(-2px);
+            background: white;
         }
 
         .input-group label {
@@ -54,7 +62,7 @@
             color: #7a6f69;
             font-size: 14px;
             pointer-events: none;
-            transition: 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .input-group input:focus + label,
@@ -62,7 +70,8 @@
             top: -8px;
             left: 12px;
             font-size: 12px;
-            color: #b68258;
+            color: #C7A27C;
+            font-weight: 600;
         }
 
         .input-group select:focus + label,
@@ -70,7 +79,8 @@
             top: -8px;
             left: 12px;
             font-size: 12px;
-            color: #b68258;
+            color: #C7A27C;
+            font-weight: 600;
         }
 
 
@@ -107,25 +117,49 @@
 
 
         /* -----------------------------------------
-           FORM CARD 
+           ENHANCED FORM CARD 
         ------------------------------------------ */
         .form-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(18px);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
             padding: 35px;
             border-radius: 20px;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
             animation: slideIn 0.8s ease;
+            transition: all 0.4s ease;
+        }
+
+        .form-card:hover {
+            box-shadow: 0 25px 60px rgba(0,0,0,0.2);
+            transform: translateY(-5px);
         }
 
         .btn-primary {
-            transition: 0.25s ease;
+            transition: all 0.3s ease;
             width: 100%;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-primary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: 0.6s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
         .btn-primary:hover {
-            box-shadow: 0 12px 22px rgba(183,130,88,0.35);
-            transform: translateY(-2px);
+            box-shadow: 0 15px 35px rgba(183,130,88,0.4);
+            transform: translateY(-3px);
         }
 
 
@@ -136,7 +170,7 @@
             width: 480px;
             max-width: 100%;
             animation: floatImg 4.5s ease-in-out infinite;
-            filter: drop-shadow(0 14px 24px rgba(0,0,0,0.18));
+            filter: drop-shadow(0 20px 35px rgba(0,0,0,0.2));
         }
 
         @keyframes floatImg {
@@ -219,30 +253,59 @@
 
 
         /* -----------------------------------------
-           LOADER 
+           ENHANCED LOADER 
         ------------------------------------------ */
         .loader-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(255,255,255,0.85);
-            backdrop-filter: blur(6px);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
             justify-content: center;
             align-items: center;
             z-index: 9999;
+            flex-direction: column;
         }
 
         .loader {
             width: 70px;
             height: 70px;
-            border: 6px solid #d3c4b4;
-            border-top-color: #b68258;
+            border: 6px solid #E8D4BC;
+            border-top-color: #C7A27C;
             border-radius: 50%;
-            animation: spin 0.9s linear infinite;
+            animation: spin 0.8s linear infinite;
+            position: relative;
+        }
+
+        .loader::after {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border: 4px solid transparent;
+            border-bottom-color: #B68258;
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite reverse;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            color: #6A4C36;
+            font-size: 16px;
+            font-weight: 600;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
         }
 
     </style>
@@ -252,50 +315,51 @@
 
     {% include 'navbar.html' %}
 
-    <!-- LOADING OVERLAY -->
+    <!-- ENHANCED LOADING OVERLAY -->
     <div class="loader-overlay" id="loadingScreen">
         <div class="loader"></div>
+        <div class="loader-text">Analyzing data...</div>
     </div>
 
     <div class="page-container fade-in">
 
-        <h1 class="page-title">Loan Risk Prediction</h1>
+        <h1 class="page-title scroll-reveal">Loan Risk Prediction</h1>
 
         <div class="predict-container">
 
             <!-- LEFT: FORM -->
-            <div class="form-card" style="flex: 1;">
+            <div class="form-card scroll-reveal-left" style="flex: 1;">
 
                 <form action="/predict" method="POST" onsubmit="showLoader()">
 
                     <div class="form-grid">
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <input type="number" name="age" required placeholder=" ">
                             <label>Age</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <input type="number" name="income" required placeholder=" ">
                             <label>Income</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <input type="number" name="loan_amount" required placeholder=" ">
                             <label>Loan Amount</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <input type="number" name="credit_score" required placeholder=" ">
                             <label>Credit Score</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <input type="number" step="0.01" name="dti_ratio" required placeholder=" ">
                             <label>DTI Ratio</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <select name="education" required>
                                 <option value="" disabled selected hidden></option>
                                 <option>High School</option>
@@ -306,7 +370,7 @@
                             <label>Education</label>
                         </div>
 
-                        <div class="input-group">
+                        <div class="input-group scroll-reveal stagger-child">
                             <select name="employment" required>
                                 <option value="" disabled selected hidden></option>
                                 <option>Full-time</option>
@@ -319,7 +383,7 @@
 
                     </div>
 
-                    <button type="submit" class="btn-primary full-btn" style="margin-top: 18px;">
+                    <button type="submit" class="btn-primary full-btn scroll-reveal" style="margin-top: 18px;">
                         Predict →
                     </button>
 
@@ -327,7 +391,7 @@
             </div>
 
             <!-- RIGHT IMAGE -->
-            <div class="predict-illustration" style="flex: 1; text-align:center;">
+            <div class="predict-illustration scroll-reveal-right" style="flex: 1; text-align:center;">
                 <img src="{{ url_for('static', filename='img/predict.png') }}" alt="Predict Illustration">
             </div>
 
@@ -354,6 +418,9 @@ function showLoader() {
 </script>
 
 {% include 'footer.html' %}
+
+<!-- Professional Animations Script -->
+<script src="{{ url_for('static', filename='js/animations.js') }}"></script>
 
 </body>
 </html>
