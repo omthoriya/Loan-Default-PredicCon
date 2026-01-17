@@ -5,7 +5,6 @@ import pandas as pd
 import os
 import sys
 
-# ADD THESE LINES HERE
 print("=" * 50)
 print("🚀 FLASK APP STARTING")
 print(f"📂 Working directory: {os.getcwd()}")
@@ -16,6 +15,10 @@ sys.stdout.flush()
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "loan_secret_key_123"
+
+print("🚀 Starting Flask app...")
+print(f"📂 Current directory: {os.getcwd()}")
+print(f"📂 Files in directory: {os.listdir('.')}")
 
 # -------------------------------------------------
 # LOAD ML MODEL SAFELY
@@ -53,10 +56,11 @@ def init_db():
             c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
                       ("admin", "12345"))
 
-        # HISTORY TABLE
+        # HISTORY TABLE - NOW WITH USERNAME TO TRACK USER DATA
         c.execute("""
             CREATE TABLE IF NOT EXISTS history (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT,
                 age REAL,
                 income REAL,
                 loan_amount REAL,
@@ -64,7 +68,8 @@ def init_db():
                 dti_ratio REAL,
                 education TEXT,
                 employment TEXT,
-                prediction INTEGER
+                prediction INTEGER,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         """)
 
@@ -169,7 +174,7 @@ def predict_page():
 
 
 # -------------------------------------------------
-# PREDICT RESULT (POST)
+# PREDICT RESULT (POST) - NOW SAVES USERNAME
 # -------------------------------------------------
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -177,6 +182,9 @@ def predict():
         return redirect(url_for("login"))
 
     try:
+        # Get current logged-in user
+        username = session.get("user")
+        
         age = float(request.form["age"])
         income = float(request.form["income"])
         loan_amount = float(request.form["loan_amount"])
@@ -198,13 +206,13 @@ def predict():
 
         prediction = int(model.predict(data)[0])
 
-        # SAVE TO DB
+        # SAVE TO DB WITH USERNAME
         conn = sqlite3.connect(DB_NAME)
         c = conn.cursor()
         c.execute("""
-            INSERT INTO history (age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        """, (age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction))
+            INSERT INTO history (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """, (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction))
 
         conn.commit()
         conn.close()
@@ -216,15 +224,21 @@ def predict():
 
 
 # -------------------------------------------------
-# DASHBOARD
+# DASHBOARD - NOW SHOWS ONLY USER'S OWN DATA
 # -------------------------------------------------
 @app.route("/dashboard")
 def dashboard():
     if not login_required():
         return redirect(url_for("login"))
 
+    # Get current logged-in user
+    username = session.get("user")
+
     conn = sqlite3.connect(DB_NAME)
-    df = pd.read_sql_query("SELECT * FROM history", conn)
+    
+    # Only get history for current user
+    df = pd.read_sql_query("SELECT * FROM history WHERE username = ?", conn, params=(username,))
+    
     conn.close()
 
     safe = len(df[df["prediction"] == 0])
