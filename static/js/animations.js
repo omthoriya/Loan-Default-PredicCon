@@ -236,11 +236,12 @@ inputs.forEach(input => {
 });
 
 // ==========================================
-// 9. PAGE LOAD ANIMATIONS
+// 9. PAGE LOAD ANIMATIONS (FIXED)
 // ==========================================
 window.addEventListener('load', () => {
     document.body.classList.add('loaded');
-     document.body.style.opacity = '1'; 
+    // FIX: Ensure body is visible
+    document.body.style.opacity = '1';
     
     // Animate elements in sequence
     const heroElements = document.querySelectorAll('.hero-text > *, .hero-image');
@@ -251,6 +252,11 @@ window.addEventListener('load', () => {
         }, index * 150);
     });
 });
+
+// Fallback: Ensure visibility immediately if page already loaded
+if (document.readyState === 'complete') {
+    document.body.style.opacity = '1';
+}
 
 // ==========================================
 // 10. SMOOTH ANCHOR SCROLLING
@@ -384,4 +390,3 @@ cursorStyle.textContent = `
 document.head.appendChild(cursorStyle);
 
 console.log('🔥 LoanShield Professional Animations Loaded!');
-
