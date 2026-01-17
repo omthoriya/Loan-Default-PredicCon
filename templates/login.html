@@ -177,6 +177,40 @@
             color: #B68258;
         }
 
+        /* NEW: Signup link styling */
+        .signup-link {
+            margin-top: 18px;
+            font-size: 14px;
+            color: #5A4A3B;
+        }
+
+        .signup-link a {
+            color: #C7A27C;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .signup-link a::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #C7A27C;
+            transition: width 0.3s ease;
+        }
+
+        .signup-link a:hover::after {
+            width: 100%;
+        }
+
+        .signup-link a:hover {
+            color: #B68258;
+        }
+
         /* --------------------------------------
            MOBILE FIXES - TABLET
         ---------------------------------------*/
@@ -203,6 +237,10 @@
             }
 
             .default-info {
+                font-size: 13px !important;
+            }
+
+            .signup-link {
                 font-size: 13px !important;
             }
         }
@@ -256,6 +294,11 @@
                 margin-top: 18px !important;
                 font-size: 13px !important;
             }
+
+            .signup-link {
+                margin-top: 15px !important;
+                font-size: 13px !important;
+            }
         }
 
         /* --------------------------------------
@@ -289,6 +332,10 @@
             .default-info {
                 font-size: 12px !important;
             }
+
+            .signup-link {
+                font-size: 12px !important;
+            }
         }
 
     </style>
@@ -314,6 +361,10 @@
     </form>
 
     <p class="default-info">Default Login: <b>admin / 12345</b></p>
+    
+    <p class="signup-link">
+        Don't have an account? <a href="/signup">Sign up here</a>
+    </p>
 </div>
 
 <!-- ⭐ FOOTER INCLUDED HERE ⭐ -->
