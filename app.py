@@ -5,12 +5,17 @@ import pandas as pd
 import os
 import sys
 
+# ADD THESE LINES HERE
+print("=" * 50)
+print("🚀 FLASK APP STARTING")
+print(f"📂 Working directory: {os.getcwd()}")
+print(f"📂 Files available: {os.listdir('.')}")
+print(f"🔧 PORT from environment: {os.environ.get('PORT', 'NOT SET')}")
+print("=" * 50)
+sys.stdout.flush()
+
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "loan_secret_key_123"
-
-print("🚀 Starting Flask app...")
-print(f"📂 Current directory: {os.getcwd()}")
-print(f"📂 Files in directory: {os.listdir('.')}")
 
 # -------------------------------------------------
 # LOAD ML MODEL SAFELY
