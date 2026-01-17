@@ -110,7 +110,7 @@
 
         .form-card:hover {
             box-shadow: 0 25px 60px rgba(0,0,0,0.2);
-            transform: translateY(-5px);
+            /* Removed transform - no more movement on hover */
         }
 
         .btn-primary {
@@ -148,13 +148,8 @@
         .predict-illustration img {
             width: 480px;
             max-width: 100%;
-            animation: floatImg 4.5s ease-in-out infinite;
             filter: drop-shadow(0 20px 35px rgba(0,0,0,0.2));
-        }
-
-        @keyframes floatImg {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+            /* Removed floating animation - image stays still */
         }
 
 
