@@ -24,15 +24,17 @@ body {
     color: #2F2E2E;
     overflow-x: hidden;
     position: relative;
+    /* FIXED: Remove initial opacity 0 that was causing blank pages */
+    opacity: 1;
 }
 
-/* Smooth page transitions */
-body {
-    opacity: 0;
-    animation: pageLoad 0.6s ease forwards;
+/* Optional smooth fade-in that won't break pages */
+body.fade-in-loaded {
+    animation: pageLoad 0.6s ease;
 }
 
 @keyframes pageLoad {
+    from { opacity: 0; }
     to { opacity: 1; }
 }
 
