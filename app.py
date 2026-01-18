@@ -247,6 +247,18 @@ def predict():
 
         prediction = int(model.predict(data)[0])
 
+        # Store prediction details in session for PDF generation
+        session['last_prediction'] = {
+            'age': age,
+            'income': income,
+            'loan_amount': loan_amount,
+            'credit_score': credit_score,
+            'dti_ratio': dti_ratio,
+            'education': education,
+            'employment': employment,
+            'prediction': prediction
+        }
+
         # SAVE TO DB WITH USERNAME
         conn = get_db_connection()
         if conn:
