@@ -3,15 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoanShield - Smart Loan Default Prediction</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=12">
-
+    <title>LoanShield - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
+    
     <style>
-        /* ----------------------------
-           HOME PAGE VISUAL ENHANCEMENTS
-        -----------------------------*/
-
-        body.home-body {
+        body {
             background: linear-gradient(135deg, #f8f4ef, #f6ece3, #fbf7f2);
             background-size: 400% 400%;
             animation: bgShift 16s ease infinite;
@@ -24,179 +20,242 @@
         }
 
         .hero {
-            padding: 40px 0;
+            padding: 60px 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
             gap: 60px;
         }
 
         .hero-text {
             flex: 1;
-            animation: fadeLeft 0.9s ease;
+            max-width: 600px;
         }
 
-        @keyframes fadeLeft {
-            from { opacity: 0; transform: translateX(-35px); }
-            to { opacity: 1; transform: translateX(0); }
+        .badge {
+            background: linear-gradient(135deg, #E8D4BC, #D4C2A8);
+            padding: 8px 18px;
+            border-radius: 22px;
+            font-size: 14px;
+            color: #523A28;
+            display: inline-block;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(232,212,188,0.4);
         }
 
         .hero-text h1 {
-            animation: titleGlow 3s ease-in-out infinite;
-            line-height: 1.15;
+            font-size: 52px;
+            font-weight: 700;
+            color: #3A2F2F;
+            line-height: 1.2;
+            margin: 20px 0;
         }
 
-        @keyframes titleGlow {
-            0% { text-shadow: 0 0 0px rgba(183,130,88,0.2); }
-            50% { text-shadow: 0 0 18px rgba(183,130,88,0.45); }
-            100% { text-shadow: 0 0 0px rgba(183,130,88,0.2); }
+        .highlight {
+            background: linear-gradient(135deg, #C28E5A 0%, #B68258 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .hero-image img {
-            width: 480px;
-            max-width: 100%;
-            filter: drop-shadow(0 12px 25px rgba(0,0,0,0.18));
-            animation: floatImg 4.4s ease-in-out infinite;
+        .hero-text p {
+            font-size: 18px;
+            line-height: 1.7;
+            color: #5A4A3B;
+            margin: 20px 0;
         }
 
-        @keyframes floatImg {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .stats {
+            display: flex;
+            gap: 25px;
+            margin-top: 40px;
+            flex-wrap: wrap;
         }
 
         .stat-box {
-            transition: 0.3s ease;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            padding: 18px 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            min-width: 140px;
+            transition: all 0.3s ease;
+            cursor: pointer;
         }
-        
+
         .stat-box:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 20px rgba(183,130,88,0.2);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(199,162,124,0.25);
         }
 
-        /* ----------------------------
-           MOBILE RESPONSIVE FIX
-        -----------------------------*/
+        .stat-box h2 {
+            font-size: 32px;
+            color: #C28E5A;
+            margin: 0 0 5px 0;
+            font-weight: 700;
+        }
 
-        @media(max-width: 950px){
+        .stat-box p {
+            font-size: 14px;
+            color: #5A4A3B;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        .hero-image {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .hero-image img {
+            width: 100%;
+            max-width: 500px;
+            display: block;
+            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+        }
+
+        @media(max-width: 950px) {
             .hero {
                 flex-direction: column-reverse;
                 text-align: center;
-                gap: 28px;
-                padding-top: 10px;
+                gap: 40px;
+                padding: 40px 20px;
             }
 
-            .hero-image img {
-                width: 300px !important;
-                margin-top: -10px;
+            .hero-text {
+                max-width: 100%;
+            }
+
+            .hero-text h1 {
+                font-size: 42px;
+            }
+
+            .hero-buttons {
+                justify-content: center;
             }
 
             .stats {
                 justify-content: center;
-                gap: 18px;
+            }
+
+            .hero-image img {
+                max-width: 400px;
             }
         }
 
-        @media(max-width: 600px){
-
+        @media(max-width: 600px) {
             .hero {
-                gap: 18px !important;
-                padding-bottom: 35px;
+                padding: 30px 15px;
+                gap: 30px;
             }
 
             .hero-text h1 {
-                font-size: 30px;
-                margin-bottom: 10px;
+                font-size: 32px;
             }
 
             .hero-text p {
-                font-size: 15px;
+                font-size: 16px;
             }
 
             .badge {
                 font-size: 12px;
-                padding: 6px 12px;
+                padding: 6px 14px;
             }
 
             .hero-buttons {
-                margin-top: 10px;
+                flex-direction: column;
+                width: 100%;
             }
 
-            .hero-buttons .btn-primary,
-            .hero-buttons .btn-secondary {
-                display: block;
+            .btn-primary,
+            .btn-secondary {
                 width: 100%;
-                margin-bottom: 10px;
                 text-align: center;
             }
 
-            .stat-box {
-                padding: 8px;
-                width: 90px;
+            .stats {
+                gap: 15px;
             }
 
-            .stat-box h2 { font-size: 18px; }
-            .stat-box p { font-size: 12px; }
-        }
+            .stat-box {
+                min-width: 110px;
+                padding: 15px 18px;
+            }
 
+            .stat-box h2 {
+                font-size: 26px;
+            }
+
+            .stat-box p {
+                font-size: 12px;
+            }
+
+            .hero-image img {
+                max-width: 300px;
+            }
+        }
     </style>
 </head>
 
-<body class="home-body fade-in">
-
+<body class="fade-in">
     {% include 'navbar.html' %}
 
-    <section class="page-container">
-
-        <div class="hero fade-in">
-
-            <!-- LEFT TEXT -->
-            <div class="hero-text scroll-reveal-left">
-                <div class="badge scroll-reveal stagger-child">AI-Powered Loan Risk Assessment</div>
-
-                <h1 class="scroll-reveal stagger-child">
-                    Advanced Loan<br>
+    <div class="page-container">
+        <div class="hero">
+            <!-- Left: Hero Text -->
+            <div class="hero-text scroll-reveal">
+                <span class="badge">AI-Powered Loan Risk Assessment</span>
+                <h1>
+                    Advanced Loan <br>
                     <span class="highlight">Default Prediction</span>
                 </h1>
-
-                <p class="scroll-reveal stagger-child">
-                    Analyze financial data using cutting-edge AI and instantly predict
-                    the risk of loan default with high accuracy.
+                <p>
+                    Analyze financial data using cutting-edge AI and instantly predict the risk 
+                    of loan default with high accuracy.
                 </p>
 
-                <div class="hero-buttons scroll-reveal stagger-child">
+                <div class="hero-buttons">
                     <a href="/predict" class="btn-primary">Start Prediction →</a>
                     <a href="/dashboard" class="btn-secondary">View History</a>
                 </div>
 
-                <div class="stats fade-in stagger-parent">
+                <!-- Real-time Stats -->
+                <div class="stats">
                     <div class="stat-box scroll-reveal stagger-child">
-                        <h2 data-count="97">97</h2>
-                        <p>% Accuracy</p>
+                        <h2>{{ total_predictions }}</h2>
+                        <p>Total Predictions</p>
                     </div>
+
                     <div class="stat-box scroll-reveal stagger-child">
-                        <h2>0.4s</h2>
-                        <p>Prediction Time</p>
+                        <h2>{{ total_users }}</h2>
+                        <p>Total Users</p>
                     </div>
+
                     <div class="stat-box scroll-reveal stagger-child">
-                        <h2>24/7</h2>
-                        <p>Availability</p>
+                        <h2>{{ avg_response_time }}</h2>
+                        <p>Avg Response Time</p>
                     </div>
                 </div>
             </div>
 
-            <!-- RIGHT IMAGE -->
-            <div class="hero-image fade-in scroll-reveal-right">
-                <img src="{{ url_for('static', filename='img/home.png') }}" alt="Home Illustration">
+            <!-- Right: Hero Image -->
+            <div class="hero-image scroll-reveal-right">
+                <img src="{{ url_for('static', filename='img/hero.png') }}" alt="Loan Risk Assessment">
             </div>
-
         </div>
-
-    </section>
+    </div>
 
     {% include 'footer.html' %}
-
-    <!-- Professional Animations Script -->
     <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
-
 </body>
 </html>
