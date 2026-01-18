@@ -1,9 +1,10 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 import joblib
-import sqlite3
 import pandas as pd
 import os
 import sys
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 print("=" * 50)
 print("🚀 FLASK APP STARTING")
@@ -17,8 +18,6 @@ app = Flask(__name__, static_folder="static", template_folder="templates")
 app.secret_key = "loan_secret_key_123"
 
 print("🚀 Starting Flask app...")
-print(f"📂 Current directory: {os.getcwd()}")
-print(f"📂 Files in directory: {os.listdir('.')}")
 
 # -------------------------------------------------
 # LOAD ML MODEL SAFELY
@@ -32,35 +31,55 @@ except Exception as e:
 
 
 # -------------------------------------------------
-# DATABASE
+# DATABASE CONNECTION (PostgreSQL)
 # -------------------------------------------------
-DB_NAME = "database.db"
+def get_db_connection():
+    """Get PostgreSQL connection from Railway environment variable"""
+    try:
+        # Railway automatically provides DATABASE_URL
+        database_url = os.environ.get('DATABASE_URL')
+        
+        if not database_url:
+            print("⚠️ DATABASE_URL not found, using local PostgreSQL")
+            database_url = "postgresql://localhost/loanshield"
+        
+        conn = psycopg2.connect(database_url)
+        return conn
+    except Exception as e:
+        print(f"❌ Database connection error: {e}")
+        return None
+
 
 def init_db():
+    """Initialize PostgreSQL tables"""
     try:
-        conn = sqlite3.connect(DB_NAME)
+        conn = get_db_connection()
+        if not conn:
+            print("❌ Cannot initialize database - no connection")
+            return
+            
         c = conn.cursor()
 
         # USERS TABLE
         c.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT UNIQUE,
-                password TEXT
+                id SERIAL PRIMARY KEY,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
             )
         """)
 
         # DEFAULT ADMIN
-        c.execute("SELECT * FROM users WHERE username=?", ("admin",))
+        c.execute("SELECT * FROM users WHERE username=%s", ("admin",))
         if not c.fetchone():
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+            c.execute("INSERT INTO users (username, password) VALUES (%s, %s)",
                       ("admin", "12345"))
 
-        # HISTORY TABLE - NOW WITH USERNAME TO TRACK USER DATA
+        # HISTORY TABLE
         c.execute("""
             CREATE TABLE IF NOT EXISTS history (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                username TEXT,
+                id SERIAL PRIMARY KEY,
+                username TEXT NOT NULL,
                 age REAL,
                 income REAL,
                 loan_amount REAL,
@@ -75,37 +94,11 @@ def init_db():
 
         conn.commit()
         conn.close()
-        print("✅ Database initialized successfully!")
+        print("✅ PostgreSQL database initialized successfully!")
     except Exception as e:
         print(f"⚠️ Database initialization error: {e}")
 
-def migrate_db():
-    """Add username column to existing history table if it doesn't exist"""
-    try:
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        
-        # Check if username column exists
-        c.execute("PRAGMA table_info(history)")
-        columns = [column[1] for column in c.fetchall()]
-        
-        if 'username' not in columns:
-            print("🔧 Migrating database - adding username column...")
-            # Add username column
-            c.execute("ALTER TABLE history ADD COLUMN username TEXT")
-            # Set all existing records to 'admin' (or NULL)
-            c.execute("UPDATE history SET username = 'admin' WHERE username IS NULL")
-            conn.commit()
-            print("✅ Database migration completed!")
-        else:
-            print("✅ Database already up to date")
-        
-        conn.close()
-    except Exception as e:
-        print(f"⚠️ Migration error: {e}")
-
 init_db()
-migrate_db()
 
 
 # -------------------------------------------------
@@ -116,13 +109,20 @@ def login_required():
 
 
 def validate_user(username, password):
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("SELECT * FROM users WHERE username=? AND password=?",
-              (username, password))
-    user = c.fetchone()
-    conn.close()
-    return user is not None
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return False
+            
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE username=%s AND password=%s",
+                  (username, password))
+        user = c.fetchone()
+        conn.close()
+        return user is not None
+    except Exception as e:
+        print(f"❌ Login validation error: {e}")
+        return False
 
 
 # -------------------------------------------------
@@ -146,7 +146,6 @@ def login():
     return render_template("login.html")
 
 
-
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
     if login_required():
@@ -167,24 +166,26 @@ def signup():
             return render_template("signup.html", error="Password must be at least 5 characters!")
 
         try:
-            conn = sqlite3.connect(DB_NAME)
+            conn = get_db_connection()
+            if not conn:
+                return render_template("signup.html", error="Database connection error!")
+                
             c = conn.cursor()
-            c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
+            c.execute("INSERT INTO users (username, password) VALUES (%s, %s)",
                       (username, password))
 
             conn.commit()
             conn.close()
+            print(f"✅ New user registered: {username}")
             return redirect(url_for("login"))
 
-        except sqlite3.IntegrityError:
-            # This specifically catches duplicate username errors
+        except psycopg2.IntegrityError:
             return render_template("signup.html", error="Username already exists!")
         except Exception as e:
-            # Catch any other errors
+            print(f"❌ Signup error: {e}")
             return render_template("signup.html", error=f"An error occurred: {str(e)}")
 
     return render_template("signup.html")
-
 
 
 @app.route("/logout")
@@ -214,7 +215,7 @@ def predict_page():
 
 
 # -------------------------------------------------
-# PREDICT RESULT (POST) - NOW SAVES USERNAME
+# PREDICT RESULT (POST)
 # -------------------------------------------------
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -247,24 +248,27 @@ def predict():
         prediction = int(model.predict(data)[0])
 
         # SAVE TO DB WITH USERNAME
-        conn = sqlite3.connect(DB_NAME)
-        c = conn.cursor()
-        c.execute("""
-            INSERT INTO history (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """, (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction))
+        conn = get_db_connection()
+        if conn:
+            c = conn.cursor()
+            c.execute("""
+                INSERT INTO history (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction))
 
-        conn.commit()
-        conn.close()
+            conn.commit()
+            conn.close()
+            print(f"✅ Prediction saved for user: {username}")
 
         return render_template("result.html", prediction=prediction)
 
     except Exception as e:
+        print(f"❌ Prediction error: {e}")
         return f"Error: {str(e)}"
 
 
 # -------------------------------------------------
-# DASHBOARD - NOW SHOWS ONLY USER'S OWN DATA
+# DASHBOARD
 # -------------------------------------------------
 @app.route("/dashboard")
 def dashboard():
@@ -274,24 +278,38 @@ def dashboard():
     # Get current logged-in user
     username = session.get("user")
 
-    conn = sqlite3.connect(DB_NAME)
-    
-    # Only get history for current user
-    df = pd.read_sql_query("SELECT * FROM history WHERE username = ?", conn, params=(username,))
-    
-    conn.close()
+    try:
+        conn = get_db_connection()
+        if not conn:
+            return render_template("dashboard.html", history=[], safe=0, danger=0, total=0)
+        
+        # Get history for current user using DictCursor for easy conversion
+        c = conn.cursor(cursor_factory=RealDictCursor)
+        c.execute("SELECT * FROM history WHERE username = %s ORDER BY created_at DESC", (username,))
+        rows = c.fetchall()
+        conn.close()
 
-    safe = len(df[df["prediction"] == 0])
-    danger = len(df[df["prediction"] == 1])
-    total = len(df)
+        # Convert to list of dicts
+        history = [dict(row) for row in rows]
+        
+        # Calculate stats
+        safe = sum(1 for row in history if row['prediction'] == 0)
+        danger = sum(1 for row in history if row['prediction'] == 1)
+        total = len(history)
 
-    return render_template(
-        "dashboard.html",
-        history=df.to_dict(orient="records"),
-        safe=safe,
-        danger=danger,
-        total=total
-    )
+        print(f"📊 Dashboard for {username}: {total} predictions ({safe} safe, {danger} danger)")
+
+        return render_template(
+            "dashboard.html",
+            history=history,
+            safe=safe,
+            danger=danger,
+            total=total
+        )
+    except Exception as e:
+        print(f"❌ Dashboard error: {e}")
+        return render_template("dashboard.html", history=[], safe=0, danger=0, total=0)
+
 
 @app.route("/about")
 def about():
@@ -319,7 +337,6 @@ def send_message():
     print("Message:", message)
 
     return render_template("contact.html", sent=True)
-
 
 
 # -------------------------------------------------
