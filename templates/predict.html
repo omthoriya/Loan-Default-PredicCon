@@ -102,10 +102,11 @@
 
 
         /* -----------------------------------------
-           SIMPLE FORM INPUTS
+           TOOLTIP STYLES
         ------------------------------------------ */
         .input-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
         .input-group label {
@@ -115,8 +116,82 @@
             font-weight: 600;
             color: #6A4C36;
             text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
+        .tooltip-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: linear-gradient(135deg, #C7A27C, #B68258);
+            color: white;
+            border-radius: 50%;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: help;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 2px 8px rgba(199, 162, 124, 0.4);
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(-5px);
+            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 400;
+            white-space: nowrap;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+            line-height: 1.4;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1a1a1a;
+        }
+
+        .tooltip-icon:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        /* Mobile tooltip adjustments */
+        @media (max-width: 600px) {
+            .tooltip-text {
+                white-space: normal;
+                max-width: 200px;
+                text-align: center;
+            }
+        }
+
+
+        /* -----------------------------------------
+           SIMPLE FORM INPUTS
+        ------------------------------------------ */
         .input-group input,
         .input-group select {
             width: 100%;
@@ -420,32 +495,68 @@
                     <div class="form-grid">
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Age</label>
-                            <input type="number" name="age" id="age" required>
+                            <label>
+                                Age
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Your current age (18-100 years)</span>
+                                </span>
+                            </label>
+                            <input type="number" name="age" id="age" min="18" max="100" required>
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Income</label>
-                            <input type="number" name="income" id="income" required>
+                            <label>
+                                Annual Income
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Your total yearly income in rupees</span>
+                                </span>
+                            </label>
+                            <input type="number" name="income" id="income" min="0" required>
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Loan Amount</label>
-                            <input type="number" name="loan_amount" id="loan_amount" required>
+                            <label>
+                                Loan Amount
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Total loan amount you're requesting</span>
+                                </span>
+                            </label>
+                            <input type="number" name="loan_amount" id="loan_amount" min="0" required>
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Credit Score</label>
-                            <input type="number" name="credit_score" id="credit_score" required>
+                            <label>
+                                Credit Score
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Your credit score (300-850). Higher is better!</span>
+                                </span>
+                            </label>
+                            <input type="number" name="credit_score" id="credit_score" min="300" max="850" required>
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>DTI Ratio</label>
-                            <input type="number" step="0.01" name="dti_ratio" id="dti_ratio" required>
+                            <label>
+                                DTI Ratio
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Debt-to-Income ratio (0-1). Lower indicates better financial health</span>
+                                </span>
+                            </label>
+                            <input type="number" step="0.01" name="dti_ratio" id="dti_ratio" min="0" max="1" required>
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Education</label>
+                            <label>
+                                Education
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Your highest education level completed</span>
+                                </span>
+                            </label>
                             <select name="education" id="education" required>
                                 <option value="" disabled selected>Select education</option>
                                 <option>High School</option>
@@ -456,7 +567,13 @@
                         </div>
 
                         <div class="input-group scroll-reveal stagger-child">
-                            <label>Employment</label>
+                            <label>
+                                Employment
+                                <span class="tooltip-icon">
+                                    ?
+                                    <span class="tooltip-text">Your current employment status</span>
+                                </span>
+                            </label>
                             <select name="employment" id="employment" required>
                                 <option value="" disabled selected>Select employment</option>
                                 <option>Full-time</option>
@@ -491,10 +608,10 @@ let currentField = 0;
 
 const fields = [
     { id: 'age', question: 'Please tell me your age' },
-    { id: 'income', question: 'What is your annual income?' },
-    { id: 'loan_amount', question: 'What loan amount do you need?' },
-    { id: 'credit_score', question: 'What is your credit score?' },
-    { id: 'dti_ratio', question: 'What is your debt to income ratio?' },
+    { id: 'income', question: 'What is your annual income? You can say something like 5 lakhs or 500000' },
+    { id: 'loan_amount', question: 'What loan amount do you need? You can say something like 2 lakhs or 200000' },
+    { id: 'credit_score', question: 'What is your credit score? It should be between 300 and 850' },
+    { id: 'dti_ratio', question: 'What is your debt to income ratio? Say a decimal value like 0.3 or point 3' },
     { id: 'education', question: 'What is your education level? Say High School, Bachelor, Master, or PhD' },
     { id: 'employment', question: 'What is your employment status? Say Full-time, Part-time, Self-employed, or Unemployed' }
 ];
@@ -553,39 +670,128 @@ function initVoiceRecognition() {
     return true;
 }
 
+function parseIndianNumber(transcript) {
+    // Handle lakhs, thousands, crores
+    let value = 0;
+    
+    // Extract the number part
+    const words = transcript.replace(/[,\s]+/g, ' ').toLowerCase();
+    
+    // Handle "lakh" or "lakhs"
+    if (words.includes('lakh')) {
+        const match = words.match(/(\d+\.?\d*)\s*lakh/);
+        if (match) {
+            value = parseFloat(match[1]) * 100000;
+        }
+    }
+    // Handle "thousand"
+    else if (words.includes('thousand')) {
+        const match = words.match(/(\d+\.?\d*)\s*thousand/);
+        if (match) {
+            value = parseFloat(match[1]) * 1000;
+        }
+    }
+    // Handle "crore" or "crores"
+    else if (words.includes('crore')) {
+        const match = words.match(/(\d+\.?\d*)\s*crore/);
+        if (match) {
+            value = parseFloat(match[1]) * 10000000;
+        }
+    }
+    // Handle regular numbers
+    else {
+        const numbers = words.match(/\d+\.?\d*/g);
+        if (numbers && numbers.length > 0) {
+            value = parseFloat(numbers[0]);
+        }
+    }
+    
+    return value;
+}
+
 function processVoiceInput(transcript) {
     const field = fields[currentField];
     const input = document.getElementById(field.id);
-    
-    // Extract numbers from speech
-    const numbers = transcript.match(/\d+(\.\d+)?/g);
     
     if (field.id === 'education') {
         if (transcript.includes('high school')) input.value = 'High School';
         else if (transcript.includes('bachelor')) input.value = 'Bachelor';
         else if (transcript.includes('master')) input.value = 'Master';
-        else if (transcript.includes('phd') || transcript.includes('ph d')) input.value = 'PhD';
+        else if (transcript.includes('phd') || transcript.includes('ph d') || transcript.includes('p h d')) input.value = 'PhD';
         else {
             speak('I did not catch that. Please say High School, Bachelor, Master, or PhD');
             setTimeout(() => askQuestion(), 1500);
             return;
         }
-    } else if (field.id === 'employment') {
+    } 
+    else if (field.id === 'employment') {
         if (transcript.includes('full') && transcript.includes('time')) input.value = 'Full-time';
         else if (transcript.includes('part') && transcript.includes('time')) input.value = 'Part-time';
-        else if (transcript.includes('self') && transcript.includes('employed')) input.value = 'Self-employed';
-        else if (transcript.includes('unemployed')) input.value = 'Unemployed';
+        else if (transcript.includes('self') && (transcript.includes('employed') || transcript.includes('employ'))) input.value = 'Self-employed';
+        else if (transcript.includes('unemployed') || transcript.includes('not employed')) input.value = 'Unemployed';
         else {
             speak('I did not catch that. Please say Full-time, Part-time, Self-employed, or Unemployed');
             setTimeout(() => askQuestion(), 1500);
             return;
         }
-    } else if (numbers && numbers.length > 0) {
-        input.value = numbers[0];
-    } else {
-        speak('I could not find a number. Please try again');
-        setTimeout(() => askQuestion(), 1500);
-        return;
+    }
+    else if (field.id === 'income' || field.id === 'loan_amount') {
+        // Parse Indian number format
+        const value = parseIndianNumber(transcript);
+        if (value > 0) {
+            input.value = Math.round(value);
+        } else {
+            speak('I could not find a number. Please try again');
+            setTimeout(() => askQuestion(), 1500);
+            return;
+        }
+    }
+    else if (field.id === 'dti_ratio') {
+        // Handle decimal values like "0.3" or "point 3" or "zero point three"
+        let value = 0;
+        
+        // Replace "point" with "."
+        const normalized = transcript.replace(/point/gi, '.');
+        
+        // Extract decimal number
+        const match = normalized.match(/(\d*\.?\d+)/);
+        if (match) {
+            value = parseFloat(match[1]);
+            if (value > 1) value = value / 100; // If they say "30" instead of "0.3"
+            input.value = value.toFixed(2);
+        } else {
+            speak('I could not find a decimal value. Please say something like point 3 or 0.3');
+            setTimeout(() => askQuestion(), 1500);
+            return;
+        }
+    }
+    else if (field.id === 'credit_score') {
+        const numbers = transcript.match(/\d+/g);
+        if (numbers && numbers.length > 0) {
+            const score = parseInt(numbers[0]);
+            if (score >= 300 && score <= 850) {
+                input.value = score;
+            } else {
+                speak('Credit score should be between 300 and 850. Please try again');
+                setTimeout(() => askQuestion(), 1500);
+                return;
+            }
+        } else {
+            speak('I could not find a number. Please try again');
+            setTimeout(() => askQuestion(), 1500);
+            return;
+        }
+    }
+    else {
+        // For age and other numeric fields
+        const numbers = transcript.match(/\d+/g);
+        if (numbers && numbers.length > 0) {
+            input.value = numbers[0];
+        } else {
+            speak('I could not find a number. Please try again');
+            setTimeout(() => askQuestion(), 1500);
+            return;
+        }
     }
     
     // Move to next field
