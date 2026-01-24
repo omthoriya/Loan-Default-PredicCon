@@ -29,21 +29,6 @@
             overflow-x: hidden;
         }
 
-        /* Main content wrapper */
-        .main-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding-bottom: 40px;
-        }
-
-        /* Footer spacing */
-        footer {
-            margin-top: auto;
-        }
-
         @keyframes bgShift {
             0%   { background-position: 0% 50%; }
             50%  { background-position: 100% 50%; }
@@ -80,6 +65,21 @@
             0%, 100% { transform: translate(0, 0) scale(1); }
             33% { transform: translate(30px, -30px) scale(1.1); }
             66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Main content wrapper */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            padding-bottom: 40px;
+        }
+
+        /* Footer spacing */
+        footer {
+            margin-top: auto;
         }
 
         /* --------------------------------------
@@ -209,6 +209,7 @@
             color: #9B8A7A;
             transition: color 0.3s;
             pointer-events: none;
+            z-index: 1;
         }
 
         .auth-card input {
@@ -235,7 +236,7 @@
             transform: translateY(-2px);
         }
 
-        .auth-card input:focus + .input-icon {
+        .auth-card input:focus ~ .input-icon {
             color: #C7A27C;
         }
 
@@ -250,6 +251,7 @@
             font-size: 18px;
             transition: color 0.3s;
             user-select: none;
+            z-index: 2;
         }
 
         .password-toggle:hover {
