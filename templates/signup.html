@@ -603,9 +603,9 @@
                 <div class="input-group">
                     <label>Password</label>
                     <div class="input-wrapper">
+                        <input type="password" name="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password" minlength="6" oninput="checkPasswordStrength()" style="padding: 14px 50px 14px 46px;">
                         <span class="input-icon">🔒</span>
-                        <input type="password" name="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password" minlength="6" oninput="checkPasswordStrength()">
-                        <span class="password-toggle" onclick="toggleSignupPassword()">👁️</span>
+                        <span class="password-toggle" onclick="toggleSignupPassword()" id="toggleIcon">👁️</span>
                     </div>
                     <div class="password-strength" id="passwordStrength">
                         <div class="password-strength-bar" id="strengthBar"></div>
@@ -633,7 +633,7 @@
 <script>
 function toggleSignupPassword() {
     const passwordInput = document.getElementById('signupPassword');
-    const toggleIcon = document.querySelector('.password-toggle');
+    const toggleIcon = document.getElementById('toggleIcon');
     
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
