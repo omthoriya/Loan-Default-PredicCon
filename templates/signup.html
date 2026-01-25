@@ -199,6 +199,7 @@
 
         .input-wrapper {
             position: relative;
+            display: block;
         }
 
         .input-icon {
@@ -242,7 +243,7 @@
         }
 
         /* Password toggle */
-        .password-toggle {
+        .eye-toggle {
             position: absolute;
             right: 16px;
             top: 50%;
@@ -252,10 +253,13 @@
             font-size: 18px;
             transition: color 0.3s;
             user-select: none;
-            z-index: 2;
+            z-index: 10;
+            background: transparent;
+            border: none;
+            padding: 5px;
         }
 
-        .password-toggle:hover {
+        .eye-toggle:hover {
             color: #C7A27C;
         }
 
@@ -308,7 +312,7 @@
         /* --------------------------------------
             BUTTON
         ---------------------------------------*/
-        .auth-card button {
+        .auth-card button[type="submit"] {
             margin-top: 10px;
             width: 100%;
             padding: 15px;
@@ -327,7 +331,7 @@
             overflow: hidden;
         }
 
-        .auth-card button::before {
+        .auth-card button[type="submit"]::before {
             content: "";
             position: absolute;
             top: 0;
@@ -338,16 +342,16 @@
             transition: left 0.5s;
         }
 
-        .auth-card button:hover::before {
+        .auth-card button[type="submit"]:hover::before {
             left: 100%;
         }
 
-        .auth-card button:hover {
+        .auth-card button[type="submit"]:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 35px rgba(199, 162, 124, 0.4);
         }
 
-        .auth-card button:active {
+        .auth-card button[type="submit"]:active {
             transform: translateY(-1px);
         }
 
@@ -524,12 +528,12 @@
                 left: 14px;
             }
 
-            .password-toggle {
+            .eye-toggle {
                 right: 14px;
                 font-size: 16px;
             }
 
-            .auth-card button {
+            .auth-card button[type="submit"] {
                 padding: 13px;
                 font-size: 15px;
                 border-radius: 10px;
@@ -595,17 +599,17 @@
                 <div class="input-group">
                     <label>Username</label>
                     <div class="input-wrapper">
-                        <span class="input-icon">👤</span>
                         <input type="text" name="username" id="username" placeholder="Choose a username" required autocomplete="username" minlength="3">
+                        <span class="input-icon">👤</span>
                     </div>
                 </div>
 
                 <div class="input-group">
                     <label>Password</label>
                     <div class="input-wrapper">
-                        <input type="password" name="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password" minlength="6" oninput="checkPasswordStrength()" style="padding: 14px 50px 14px 46px;">
+                        <input type="password" name="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password" minlength="6" oninput="checkPasswordStrength()">
                         <span class="input-icon">🔒</span>
-                        <span class="password-toggle" onclick="toggleSignupPassword()" id="toggleIcon">👁️</span>
+                        <button type="button" class="eye-toggle" id="eyeBtn" onclick="togglePassword()">👁️</button>
                     </div>
                     <div class="password-strength" id="passwordStrength">
                         <div class="password-strength-bar" id="strengthBar"></div>
@@ -631,24 +635,24 @@
 {% include 'footer.html' %}
 
 <script>
-function toggleSignupPassword() {
-    const passwordInput = document.getElementById('signupPassword');
-    const toggleIcon = document.getElementById('toggleIcon');
+function togglePassword() {
+    var passwordInput = document.getElementById('signupPassword');
+    var eyeBtn = document.getElementById('eyeBtn');
     
     if (passwordInput.type === 'password') {
         passwordInput.type = 'text';
-        toggleIcon.textContent = '🙈';
+        eyeBtn.textContent = '🙈';
     } else {
         passwordInput.type = 'password';
-        toggleIcon.textContent = '👁️';
+        eyeBtn.textContent = '👁️';
     }
 }
 
 function checkPasswordStrength() {
-    const password = document.getElementById('signupPassword').value;
-    const strengthBar = document.getElementById('strengthBar');
-    const strengthContainer = document.getElementById('passwordStrength');
-    const hint = document.getElementById('passwordHint');
+    var password = document.getElementById('signupPassword').value;
+    var strengthBar = document.getElementById('strengthBar');
+    var strengthContainer = document.getElementById('passwordStrength');
+    var hint = document.getElementById('passwordHint');
     
     if (password.length === 0) {
         strengthContainer.classList.remove('active');
@@ -659,22 +663,14 @@ function checkPasswordStrength() {
     strengthContainer.classList.add('active');
     hint.classList.add('active');
     
-    let strength = 0;
+    var strength = 0;
     
-    // Check length
     if (password.length >= 6) strength++;
     if (password.length >= 10) strength++;
-    
-    // Check for numbers
     if (/\d/.test(password)) strength++;
-    
-    // Check for letters
     if (/[a-zA-Z]/.test(password)) strength++;
-    
-    // Check for special characters
     if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
     
-    // Update strength bar
     strengthBar.className = 'password-strength-bar';
     
     if (strength <= 2) {
