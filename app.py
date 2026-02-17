@@ -34,27 +34,28 @@ except Exception as e:
 # DATABASE CONNECTION (PostgreSQL)
 # -------------------------------------------------
 def get_db_connection():
-    """Get PostgreSQL connection from DATABASE_URL (Neon/Render/Railway compatible)"""
+    """Get PostgreSQL connection from DATABASE_URL (Neon/Render compatible)"""
     try:
         database_url = os.environ.get('DATABASE_URL')
 
-        # IMPORTANT: Neon/Render uses postgresql://
-        # Some platforms sometimes give postgres:// (older format)
+        # Fix old postgres:// format (some providers use this)
         if database_url:
             database_url = database_url.replace("postgres://", "postgresql://")
 
-        # On Render, localhost DB will NOT exist.
-        # So we must require DATABASE_URL.
+        # Render has no localhost DB, so DATABASE_URL is required
         if not database_url:
             print("❌ DATABASE_URL not found! Please set it in Render Environment Variables.")
             return None
 
-        conn = psycopg2.connect(database_url)
+        # IMPORTANT FIX:
+        # Don't rely on sslmode in URL, pass it directly to psycopg2
+        conn = psycopg2.connect(database_url, sslmode="require")
         return conn
 
     except Exception as e:
         print(f"❌ Database connection error: {e}")
         return None
+
 
 
 def init_db():
