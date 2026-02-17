@@ -34,17 +34,24 @@ except Exception as e:
 # DATABASE CONNECTION (PostgreSQL)
 # -------------------------------------------------
 def get_db_connection():
-    """Get PostgreSQL connection from Railway environment variable"""
+    """Get PostgreSQL connection from DATABASE_URL (Neon/Render/Railway compatible)"""
     try:
-        # Railway automatically provides DATABASE_URL
         database_url = os.environ.get('DATABASE_URL')
-        
+
+        # IMPORTANT: Neon/Render uses postgresql://
+        # Some platforms sometimes give postgres:// (older format)
+        if database_url:
+            database_url = database_url.replace("postgres://", "postgresql://")
+
+        # On Render, localhost DB will NOT exist.
+        # So we must require DATABASE_URL.
         if not database_url:
-            print("⚠️ DATABASE_URL not found, using local PostgreSQL")
-            database_url = "postgresql://localhost/loanshield"
-        
+            print("❌ DATABASE_URL not found! Please set it in Render Environment Variables.")
+            return None
+
         conn = psycopg2.connect(database_url)
         return conn
+
     except Exception as e:
         print(f"❌ Database connection error: {e}")
         return None
@@ -57,7 +64,7 @@ def init_db():
         if not conn:
             print("❌ Cannot initialize database - no connection")
             return
-            
+
         c = conn.cursor()
 
         # USERS TABLE
@@ -113,7 +120,7 @@ def validate_user(username, password):
         conn = get_db_connection()
         if not conn:
             return False
-            
+
         c = conn.cursor()
         c.execute("SELECT * FROM users WHERE username=%s AND password=%s",
                   (username, password))
@@ -158,10 +165,10 @@ def signup():
         # Validate inputs
         if not username or not password:
             return render_template("signup.html", error="Username and password are required!")
-        
+
         if len(username) < 3:
             return render_template("signup.html", error="Username must be at least 3 characters!")
-        
+
         if len(password) < 5:
             return render_template("signup.html", error="Password must be at least 5 characters!")
 
@@ -169,7 +176,7 @@ def signup():
             conn = get_db_connection()
             if not conn:
                 return render_template("signup.html", error="Database connection error!")
-                
+
             c = conn.cursor()
             c.execute("INSERT INTO users (username, password) VALUES (%s, %s)",
                       (username, password))
@@ -201,40 +208,40 @@ def logout():
 def home():
     if not login_required():
         return redirect(url_for("login"))
-    
+
     try:
         conn = get_db_connection()
         if conn:
             c = conn.cursor()
-            
+
             # Get total predictions
             c.execute("SELECT COUNT(*) FROM history")
             total_predictions = c.fetchone()[0]
-            
+
             # Get total users
             c.execute("SELECT COUNT(*) FROM users")
             total_users = c.fetchone()[0]
-            
+
             conn.close()
-            
+
             # Average response time (static for now, could be measured)
             avg_response_time = "< 1s"
-            
-            return render_template("home.html", 
-                                 total_predictions=total_predictions,
-                                 total_users=total_users,
-                                 avg_response_time=avg_response_time)
+
+            return render_template("home.html",
+                                   total_predictions=total_predictions,
+                                   total_users=total_users,
+                                   avg_response_time=avg_response_time)
         else:
-            return render_template("home.html", 
-                                 total_predictions=0,
-                                 total_users=0,
-                                 avg_response_time="< 1s")
+            return render_template("home.html",
+                                   total_predictions=0,
+                                   total_users=0,
+                                   avg_response_time="< 1s")
     except Exception as e:
         print(f"❌ Home page error: {e}")
-        return render_template("home.html", 
-                             total_predictions=0,
-                             total_users=0,
-                             avg_response_time="< 1s")
+        return render_template("home.html",
+                               total_predictions=0,
+                               total_users=0,
+                               avg_response_time="< 1s")
 
 
 # -------------------------------------------------
@@ -258,7 +265,7 @@ def predict():
     try:
         # Get current logged-in user
         username = session.get("user")
-        
+
         age = float(request.form["age"])
         income = float(request.form["income"])
         loan_amount = float(request.form["loan_amount"])
@@ -327,7 +334,7 @@ def dashboard():
         conn = get_db_connection()
         if not conn:
             return render_template("dashboard.html", history=[], safe=0, danger=0, total=0)
-        
+
         # Get history for current user using DictCursor for easy conversion
         c = conn.cursor(cursor_factory=RealDictCursor)
         c.execute("SELECT * FROM history WHERE username = %s ORDER BY created_at DESC", (username,))
@@ -336,7 +343,7 @@ def dashboard():
 
         # Convert to list of dicts
         history = [dict(row) for row in rows]
-        
+
         # Calculate stats
         safe = sum(1 for row in history if row['prediction'] == 0)
         danger = sum(1 for row in history if row['prediction'] == 1)
