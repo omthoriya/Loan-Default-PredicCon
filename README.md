@@ -1,71 +1,97 @@
-# 🛡️ LoanShield – AI Loan Default Prediction System
+# LoanShield – Loan Default Prediction System
 
-LoanShield is an **AI-powered web application** that predicts whether a customer is likely to **default on a loan**.  
-It includes an ML model, a clean UI/UX, authentication system, dashboard analytics, and full deployment.
+LoanShield is a Machine Learning based web application that predicts whether a loan applicant is **Low Risk** or **High Risk** using financial data.
 
----
-
-## 🚀 Live Demo  
-🔗 **LoanShield Web App:** https://web-production-445d8d.up.railway.app/login  
-
+This project is built using **Flask**, **Machine Learning**, and **SQLite Database** with a modern dashboard UI.
 
 ---
 
-## 📂 GitHub Repository  
-🔗 https://github.com/vishwasp1005/loan
+## 🚀 Live Demo
+
+https://YOUR-RENDER-LINK.onrender.com
 
 ---
 
-## 📌 Features
+## 🧠 Features
 
-### 🔮 Machine Learning
-- Loan default prediction using ML algorithms  
-- Model trained using scikit-learn  
-- Clean preprocessing pipeline  
-- Real-time inference
-
-### 🖥️ Frontend (UI/UX)
-- Premium animated UI  
-- Fully responsive (mobile + desktop)  
-- Glassmorphism design  
-- Smooth transitions  
-- Dashboard with interactive charts (Chart.js)
-
-### ⚙️ Backend
-- Flask web framework  
-- SQLite database for storing prediction history  
-- User authentication (Login/Logout)  
-- Secure session management
-
-### 📊 Dashboard
-- View all predictions  
-- Pie chart: Safe vs Default predictions  
-- Bar chart: Prediction distribution  
-- Table of previous records
-
-### 🌐 Deployment
-- Deployed using Railway  
-- Gunicorn production server  
-- Static assets optimized
-- 
----
-
-## 🛠️ Tech Stack
-
-| Area | Technologies |
-|------|--------------|
-| Backend | Flask, Python, SQLite |
-| ML | Scikit-Learn, Pandas, NumPy, Joblib |
-| Frontend | HTML, CSS, JavaScript, Chart.js |
-| Deployment | Railway, Gunicorn |
-| Version Control | Git, GitHub |
+- Loan Default Prediction using ML model
+- Beautiful Analytics Dashboard
+- Prediction History Tracking
+- PDF Report Download
+- Risk Visualization Charts
+- Delete Prediction Logs
+- Responsive Modern UI
 
 ---
 
-Pull requests are welcome — feel free to submit improvements!
+## 🛠️ Technologies Used
 
-🧑‍💻 Author
+- Python (Flask)
+- Scikit-learn
+- Pandas & NumPy
+- SQLite Database
+- HTML / CSS / JavaScript
+- Chart.js
+- jsPDF
 
-Vishwas Patel
-GitHub: https://github.com/vishwasp1005
+---
 
+## 📂 Project Structure
+
+# LoanShield – Loan Default Prediction System
+
+LoanShield is a Machine Learning based web application that predicts whether a loan applicant is **Low Risk** or **High Risk** using financial data.
+
+This project is built using **Flask**, **Machine Learning**, and **SQLite Database** with a modern dashboard UI.
+
+---
+
+## 🚀 Live Demo
+
+https://YOUR-RENDER-LINK.onrender.com
+
+---
+
+## 🧠 Features
+
+- Loan Default Prediction using ML model
+- Beautiful Analytics Dashboard
+- Prediction History Tracking
+- PDF Report Download
+- Risk Visualization Charts
+- Delete Prediction Logs
+- Responsive Modern UI
+
+---
+
+## 🛠️ Technologies Used
+
+- Python (Flask)
+- Scikit-learn
+- Pandas & NumPy
+- SQLite Database
+- HTML / CSS / JavaScript
+- Chart.js
+- jsPDF
+
+---
+
+## 📂 Project Structure
+
+static/
+templates/
+app.py
+loan_model.pkl
+loan_database.db
+requirements.txt
+Procfile
+
+---
+
+## ⚙️ Installation (Local)
+
+```bash
+pip install -r requirements.txt
+python app.py
+
+http://localhost:10000
