@@ -11,7 +11,7 @@ This project is built using **Flask**, **Machine Learning**, and
 
 ## 🚀 Live Demo
 
-https://YOUR-RENDER-LINK.onrender.com
+https://loanshield-3hhm.onrender.com/
 
 ---
 
@@ -69,8 +69,8 @@ https://YOUR-RENDER-LINK.onrender.com
 
 ### 1️⃣ Clone Repository
 
-    git clone https://github.com/YOUR-USERNAME/LoanShield.git
-    cd LoanShield
+    git clone https://github.com/omthoriya/Loan-Default-PredicCon
+    cd Loan-Default-PredicCon
 
 ### 2️⃣ Install Dependencies
 
