@@ -1,154 +1,167 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LoanShield - About</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=19">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}?v=25"
+    />
 
     <style>
-        /* UNIQUE ABOUT THEME - LIGHT ELEGANT MINIMALISM */
-        body {
-            background-color: #f8fafc;
-        }
+      /* UNIQUE ABOUT THEME - LIGHT ELEGANT MINIMALISM */
+      body {
+        background-color: #f8fafc;
+      }
 
-        .about-wrapper {
-            max-width: 900px;
-            margin: 0 auto;
-            width: 100%;
-        }
+      .about-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+        width: 100%;
+      }
 
-        .about-header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
+      .about-header {
+        text-align: center;
+        margin-bottom: 60px;
+      }
 
+      .about-title {
+        font-size: 54px;
+        font-weight: 800;
+        color: #0f172a;
+        letter-spacing: -2px;
+        margin-bottom: 20px;
+        line-height: 1.1;
+      }
+
+      .highlight-text {
+        color: #3b82f6;
+      }
+
+      .about-subtitle {
+        font-size: 20px;
+        color: #475569;
+        max-width: 600px;
+        margin: 0 auto;
+        line-height: 1.6;
+        font-family: "Outfit";
+      }
+
+      .content-card {
+        background: #ffffff;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 20px;
+        padding: 50px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+        margin-bottom: 30px;
+      }
+
+      .content-block {
+        margin-bottom: 40px;
+      }
+
+      .content-block:last-child {
+        margin-bottom: 0;
+      }
+
+      .block-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .block-text {
+        color: #334155;
+        font-size: 16px;
+        line-height: 1.8;
+      }
+
+      .tech-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 20px;
+      }
+
+      .tag {
+        background: #f1f5f9;
+        color: #3b82f6;
+        padding: 8px 16px;
+        border-radius: 30px;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: "Outfit";
+        border: 1px solid #e2e8f0;
+      }
+
+      @media (max-width: 768px) {
         .about-title {
-            font-size: 54px;
-            font-weight: 800;
-            color: #0f172a;
-            letter-spacing: -2px;
-            margin-bottom: 20px;
-            line-height: 1.1;
-        }
-
-        .highlight-text {
-            color: #3b82f6;
-        }
-
-        .about-subtitle {
-            font-size: 20px;
-            color: #475569;
-            max-width: 600px;
-            margin: 0 auto;
-            line-height: 1.6;
-            font-family: 'Outfit';
+          font-size: 40px;
         }
 
         .content-card {
-            background: #ffffff;
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            border-radius: 20px;
-            padding: 50px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
-            margin-bottom: 30px;
+          padding: 30px;
         }
-
-        .content-block {
-            margin-bottom: 40px;
-        }
-
-        .content-block:last-child {
-            margin-bottom: 0;
-        }
-
-        .block-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0f172a;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .block-text {
-            color: #334155;
-            font-size: 16px;
-            line-height: 1.8;
-        }
-
-        .tech-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .tag {
-            background: #f1f5f9;
-            color: #3b82f6;
-            padding: 8px 16px;
-            border-radius: 30px;
-            font-size: 14px;
-            font-weight: 600;
-            font-family: 'Outfit';
-            border: 1px solid #e2e8f0;
-        }
-
-        @media(max-width: 768px) {
-            .about-title {
-                font-size: 40px;
-            }
-
-            .content-card {
-                padding: 30px;
-            }
-        }
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     {% include 'navbar.html' %}
 
-    <div class="page-wrapper" style="padding: 150px 20px 50px;">
-        <div class="about-wrapper fade-in">
-
-            <div class="about-header">
-                <h1 class="about-title">Pioneering Financial<br> <span class="highlight-text">Security via AI.</span>
-                </h1>
-                <p class="about-subtitle">LoanShield isn't just a predictive tool; it is a unified defensive
-                    architecture for processing credit liability.</p>
-            </div>
-
-            <div class="content-card">
-                <div class="content-block">
-                    <h2 class="block-title">✦ The Mission</h2>
-                    <p class="block-text">In a rapidly accelerating financial economy, traditional subjective processing
-                        protocols leave banks vulnerable to unseen data correlations resulting in catastrophic default
-                        cascades. Our mission is to democratize institutional-grade machine learning pipelines, putting
-                        immense computational predictive capability right into the browser.</p>
-                </div>
-
-                <div class="content-block" style="border-top: 1px dashed rgba(0,0,0,0.1); padding-top: 40px;">
-                    <h2 class="block-title">✦ Technology Stack</h2>
-                    <p class="block-text">Built entirely natively with blazing fast response loops utilizing robust
-                        industry standard tech architecture, bypassing bloat entirely.</p>
-
-                    <div class="tech-tags">
-                        <div class="tag">Python Backend Core</div>
-                        <div class="tag">SciKit-Learn ML</div>
-                        <div class="tag">Flask Web Gateway</div>
-                        <div class="tag">SQLite Relational</div>
-                        <div class="tag">Chart.js Analytics</div>
-                        <div class="tag">Custom Glass UI</div>
-                    </div>
-                </div>
-            </div>
-
+    <div class="page-wrapper" style="padding: 150px 20px 50px">
+      <div class="about-wrapper fade-in">
+        <div class="about-header">
+          <h1 class="about-title">
+            Pioneering Financial<br />
+            <span class="highlight-text">Security via AI.</span>
+          </h1>
+          <p class="about-subtitle">
+            LoanShield isn't just a predictive tool; it is a unified defensive
+            architecture for processing credit liability.
+          </p>
         </div>
-    </div>
-</body>
 
+        <div class="content-card">
+          <div class="content-block">
+            <h2 class="block-title">✦ The Mission</h2>
+            <p class="block-text">
+              In a rapidly accelerating financial economy, traditional
+              subjective processing protocols leave banks vulnerable to unseen
+              data correlations resulting in catastrophic default cascades. Our
+              mission is to democratize institutional-grade machine learning
+              pipelines, putting immense computational predictive capability
+              right into the browser.
+            </p>
+          </div>
+
+          <div
+            class="content-block"
+            style="border-top: 1px dashed rgba(0, 0, 0, 0.1); padding-top: 40px"
+          >
+            <h2 class="block-title">✦ Technology Stack</h2>
+            <p class="block-text">
+              Built entirely natively with blazing fast response loops utilizing
+              robust industry standard tech architecture, bypassing bloat
+              entirely.
+            </p>
+
+            <div class="tech-tags">
+              <div class="tag">Python Backend Core</div>
+              <div class="tag">SciKit-Learn ML</div>
+              <div class="tag">Flask Web Gateway</div>
+              <div class="tag">SQLite Relational</div>
+              <div class="tag">Chart.js Analytics</div>
+              <div class="tag">Custom Glass UI</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

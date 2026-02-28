@@ -1,693 +1,774 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sign Up - LoanShield</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=11">
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}?v=25"
+    />
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        /* --------------------------------------
+      /* --------------------------------------
             PREMIUM ANIMATED BACKGROUND
         ---------------------------------------*/
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            font-family: "Poppins", sans-serif;
-            background: linear-gradient(135deg, #f8f4ef, #f3ebe3, #f7f2e8);
-            background-size: 400% 400%;
-            animation: bgShift 15s ease infinite;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        font-family: "Poppins", sans-serif;
+        background: linear-gradient(135deg, #f8f4ef, #f3ebe3, #f7f2e8);
+        background-size: 400% 400%;
+        animation: bgShift 15s ease infinite;
+        padding: 20px;
+        position: relative;
+        overflow-x: hidden;
+      }
 
-        @keyframes bgShift {
-            0%   { background-position: 0% 50%; }
-            50%  { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+      @keyframes bgShift {
+        0% {
+          background-position: 0% 50%;
         }
-
-        /* Decorative circles */
-        body::before,
-        body::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            background: radial-gradient(circle, rgba(199, 162, 124, 0.15), transparent 70%);
-            z-index: 0;
-            animation: float 20s ease-in-out infinite;
+        50% {
+          background-position: 100% 50%;
         }
-
-        body::before {
-            width: 400px;
-            height: 400px;
-            top: -100px;
-            right: -100px;
-            animation-delay: -5s;
+        100% {
+          background-position: 0% 50%;
         }
+      }
 
-        body::after {
-            width: 350px;
-            height: 350px;
-            bottom: -80px;
-            left: -80px;
-            animation-delay: -12s;
+      /* Decorative circles */
+      body::before,
+      body::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(199, 162, 124, 0.15),
+          transparent 70%
+        );
+        z-index: 0;
+        animation: float 20s ease-in-out infinite;
+      }
+
+      body::before {
+        width: 400px;
+        height: 400px;
+        top: -100px;
+        right: -100px;
+        animation-delay: -5s;
+      }
+
+      body::after {
+        width: 350px;
+        height: 350px;
+        bottom: -80px;
+        left: -80px;
+        animation-delay: -12s;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
         }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -30px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
+        33% {
+          transform: translate(30px, -30px) scale(1.1);
         }
-
-        /* Main content wrapper */
-        .main-content {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            padding-bottom: 40px;
+        66% {
+          transform: translate(-20px, 20px) scale(0.9);
         }
+      }
 
-        /* Footer spacing */
-        footer {
-            margin-top: auto;
-        }
+      /* Main content wrapper */
+      .main-content {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        padding-bottom: 40px;
+      }
 
-        /* --------------------------------------
+      /* Footer spacing */
+      footer {
+        margin-top: auto;
+      }
+
+      /* --------------------------------------
             MAIN CONTAINER
         ---------------------------------------*/
-        .signup-container {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            max-width: 440px;
-            animation: fadeUp 0.8s ease;
-        }
+      .signup-container {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 440px;
+        animation: fadeUp 0.8s ease;
+      }
 
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to   { opacity: 1; transform: translateY(0); }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
         }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
 
-        /* --------------------------------------
+      /* --------------------------------------
             LOGO SECTION
         ---------------------------------------*/
-        .logo-section {
-            text-align: center;
-            margin-bottom: 30px;
-            animation: slideDown 0.6s ease;
+      .logo-section {
+        text-align: center;
+        margin-bottom: 30px;
+        animation: slideDown 0.6s ease;
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logo-section h1 {
+        font-size: 36px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #c7a27c, #8b6f47);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 8px;
+        letter-spacing: -0.5px;
+      }
+
+      .logo-section p {
+        color: #6a4c36;
+        font-size: 14px;
+        font-weight: 500;
+        opacity: 0.8;
+      }
+
+      /* --------------------------------------
+            SIGNUP CARD
+        ---------------------------------------*/
+      .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        padding: 40px 35px;
+        box-shadow:
+          0 20px 60px rgba(0, 0, 0, 0.12),
+          0 0 0 1px rgba(199, 162, 124, 0.1);
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Gradient accent */
+      .auth-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #c7a27c, #b68258, #c7a27c);
+        background-size: 200% 100%;
+        animation: gradientFlow 3s ease infinite;
+      }
+
+      @keyframes gradientFlow {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .auth-card h2 {
+        font-size: 28px;
+        font-weight: 700;
+        color: #2c2416;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+
+      .auth-card .subtitle {
+        text-align: center;
+        color: #6a4c36;
+        font-size: 14px;
+        margin-bottom: 30px;
+        opacity: 0.8;
+      }
+
+      /* --------------------------------------
+            FORM ELEMENTS
+        ---------------------------------------*/
+      .input-group {
+        margin-bottom: 20px;
+        position: relative;
+      }
+
+      .input-group label {
+        display: block;
+        font-size: 14px;
+        font-weight: 600;
+        color: #4f433c;
+        margin-bottom: 8px;
+        transition: color 0.3s;
+      }
+
+      .input-wrapper {
+        position: relative;
+        display: block;
+      }
+
+      .input-icon {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 18px;
+        color: #9b8a7a;
+        transition: color 0.3s;
+        pointer-events: none;
+        z-index: 1;
+      }
+
+      .auth-card input {
+        width: 100%;
+        padding: 14px 16px 14px 46px;
+        border: 2px solid #e8ddd0;
+        background: #fafafa;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        font-family: "Poppins", sans-serif;
+        outline: none;
+        color: #2c2416;
+      }
+
+      .auth-card input::placeholder {
+        color: #b0a199;
+      }
+
+      .auth-card input:focus {
+        border-color: #c7a27c;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(199, 162, 124, 0.15);
+        transform: translateY(-2px);
+      }
+
+      .auth-card input:focus ~ .input-icon {
+        color: #c7a27c;
+      }
+
+      /* Password toggle */
+      .eye-toggle {
+        position: absolute;
+        right: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        color: #9b8a7a;
+        font-size: 18px;
+        transition: color 0.3s;
+        user-select: none;
+        z-index: 10;
+        background: transparent;
+        border: none;
+        padding: 5px;
+      }
+
+      .eye-toggle:hover {
+        color: #c7a27c;
+      }
+
+      /* Password strength indicator */
+      .password-strength {
+        margin-top: 8px;
+        height: 4px;
+        background: #e8ddd0;
+        border-radius: 2px;
+        overflow: hidden;
+        display: none;
+      }
+
+      .password-strength.active {
+        display: block;
+      }
+
+      .password-strength-bar {
+        height: 100%;
+        transition: all 0.3s ease;
+        border-radius: 2px;
+      }
+
+      .strength-weak {
+        width: 33%;
+        background: #ef5350;
+      }
+
+      .strength-medium {
+        width: 66%;
+        background: #ffa726;
+      }
+
+      .strength-strong {
+        width: 100%;
+        background: #66bb6a;
+      }
+
+      .password-hint {
+        font-size: 11px;
+        color: #9b8a7a;
+        margin-top: 5px;
+        display: none;
+      }
+
+      .password-hint.active {
+        display: block;
+      }
+
+      /* --------------------------------------
+            BUTTON
+        ---------------------------------------*/
+      .auth-card button[type="submit"] {
+        margin-top: 10px;
+        width: 100%;
+        padding: 15px;
+        font-size: 16px;
+        font-weight: 700;
+        border: none;
+        border-radius: 12px;
+        background: linear-gradient(135deg, #c7a27c, #b68258);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-family: "Poppins", sans-serif;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .auth-card button[type="submit"]::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
+        transition: left 0.5s;
+      }
+
+      .auth-card button[type="submit"]:hover::before {
+        left: 100%;
+      }
+
+      .auth-card button[type="submit"]:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 15px 35px rgba(199, 162, 124, 0.4);
+      }
+
+      .auth-card button[type="submit"]:active {
+        transform: translateY(-1px);
+      }
+
+      /* --------------------------------------
+            ERROR MESSAGE
+        ---------------------------------------*/
+      .error {
+        padding: 14px 16px;
+        background: linear-gradient(135deg, #ffe5e5, #ffd4d4);
+        color: #c62828;
+        border-radius: 12px;
+        font-size: 14px;
+        margin-bottom: 20px;
+        animation: shake 0.4s ease;
+        border-left: 4px solid #c62828;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .error::before {
+        content: "⚠️";
+        font-size: 18px;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-5px);
+        }
+        50% {
+          transform: translateX(5px);
+        }
+        75% {
+          transform: translateX(-5px);
+        }
+      }
+
+      /* --------------------------------------
+            LOGIN LINK
+        ---------------------------------------*/
+      .login-link {
+        margin-top: 25px;
+        text-align: center;
+        font-size: 14px;
+        color: #5a4a3b;
+      }
+
+      .login-link a {
+        color: #c7a27c;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        position: relative;
+        display: inline-block;
+      }
+
+      .login-link a::after {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #c7a27c, #b68258);
+        transition: width 0.3s ease;
+      }
+
+      .login-link a:hover::after {
+        width: 100%;
+      }
+
+      .login-link a:hover {
+        color: #b68258;
+      }
+
+      /* --------------------------------------
+            DIVIDER
+        ---------------------------------------*/
+      .divider {
+        display: flex;
+        align-items: center;
+        margin: 25px 0;
+        opacity: 0.6;
+      }
+
+      .divider::before,
+      .divider::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: linear-gradient(
+          to right,
+          transparent,
+          #d4c8bb,
+          transparent
+        );
+      }
+
+      .divider span {
+        padding: 0 15px;
+        font-size: 12px;
+        color: #9b8a7a;
+        font-weight: 600;
+        text-transform: uppercase;
+      }
+
+      /* --------------------------------------
+           MOBILE OPTIMIZATIONS
+        ---------------------------------------*/
+      @media (max-width: 768px) {
+        body {
+          padding: 15px;
         }
 
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .main-content {
+          padding-bottom: 30px;
         }
 
         .logo-section h1 {
-            font-size: 36px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #C7A27C, #8B6F47);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
+          font-size: 32px;
         }
 
-        .logo-section p {
-            color: #6A4C36;
-            font-size: 14px;
-            font-weight: 500;
-            opacity: 0.8;
-        }
-
-        /* --------------------------------------
-            SIGNUP CARD
-        ---------------------------------------*/
         .auth-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 24px;
-            padding: 40px 35px;
-            box-shadow: 
-                0 20px 60px rgba(0, 0, 0, 0.12),
-                0 0 0 1px rgba(199, 162, 124, 0.1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Gradient accent */
-        .auth-card::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, #C7A27C, #B68258, #C7A27C);
-            background-size: 200% 100%;
-            animation: gradientFlow 3s ease infinite;
-        }
-
-        @keyframes gradientFlow {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
+          padding: 35px 28px;
         }
 
         .auth-card h2 {
-            font-size: 28px;
-            font-weight: 700;
-            color: #2C2416;
-            margin-bottom: 10px;
-            text-align: center;
+          font-size: 26px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        body {
+          padding: 10px;
+        }
+
+        .main-content {
+          padding-bottom: 20px;
+        }
+
+        .logo-section {
+          margin-bottom: 25px;
+        }
+
+        .logo-section h1 {
+          font-size: 28px;
+        }
+
+        .logo-section p {
+          font-size: 13px;
+        }
+
+        .auth-card {
+          padding: 30px 24px;
+          border-radius: 20px;
+        }
+
+        .auth-card h2 {
+          font-size: 24px;
         }
 
         .auth-card .subtitle {
-            text-align: center;
-            color: #6A4C36;
-            font-size: 14px;
-            margin-bottom: 30px;
-            opacity: 0.8;
+          font-size: 13px;
+          margin-bottom: 25px;
         }
 
-        /* --------------------------------------
-            FORM ELEMENTS
-        ---------------------------------------*/
         .input-group {
-            margin-bottom: 20px;
-            position: relative;
+          margin-bottom: 18px;
         }
 
         .input-group label {
-            display: block;
-            font-size: 14px;
-            font-weight: 600;
-            color: #4f433c;
-            margin-bottom: 8px;
-            transition: color 0.3s;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: block;
-        }
-
-        .input-icon {
-            position: absolute;
-            left: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 18px;
-            color: #9B8A7A;
-            transition: color 0.3s;
-            pointer-events: none;
-            z-index: 1;
+          font-size: 13px;
+          margin-bottom: 6px;
         }
 
         .auth-card input {
-            width: 100%;
-            padding: 14px 16px 14px 46px;
-            border: 2px solid #E8DDD0;
-            background: #FAFAFA;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-family: "Poppins", sans-serif;
-            outline: none;
-            color: #2C2416;
+          padding: 13px 14px 13px 42px;
+          font-size: 14px;
+          border-radius: 10px;
         }
 
-        .auth-card input::placeholder {
-            color: #B0A199;
+        .input-icon {
+          font-size: 16px;
+          left: 14px;
         }
 
-        .auth-card input:focus {
-            border-color: #C7A27C;
-            background: white;
-            box-shadow: 0 0 0 4px rgba(199, 162, 124, 0.15);
-            transform: translateY(-2px);
-        }
-
-        .auth-card input:focus ~ .input-icon {
-            color: #C7A27C;
-        }
-
-        /* Password toggle */
         .eye-toggle {
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
-            color: #9B8A7A;
-            font-size: 18px;
-            transition: color 0.3s;
-            user-select: none;
-            z-index: 10;
-            background: transparent;
-            border: none;
-            padding: 5px;
+          right: 14px;
+          font-size: 16px;
         }
 
-        .eye-toggle:hover {
-            color: #C7A27C;
-        }
-
-        /* Password strength indicator */
-        .password-strength {
-            margin-top: 8px;
-            height: 4px;
-            background: #E8DDD0;
-            border-radius: 2px;
-            overflow: hidden;
-            display: none;
-        }
-
-        .password-strength.active {
-            display: block;
-        }
-
-        .password-strength-bar {
-            height: 100%;
-            transition: all 0.3s ease;
-            border-radius: 2px;
-        }
-
-        .strength-weak {
-            width: 33%;
-            background: #EF5350;
-        }
-
-        .strength-medium {
-            width: 66%;
-            background: #FFA726;
-        }
-
-        .strength-strong {
-            width: 100%;
-            background: #66BB6A;
-        }
-
-        .password-hint {
-            font-size: 11px;
-            color: #9B8A7A;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .password-hint.active {
-            display: block;
-        }
-
-        /* --------------------------------------
-            BUTTON
-        ---------------------------------------*/
         .auth-card button[type="submit"] {
-            margin-top: 10px;
-            width: 100%;
-            padding: 15px;
-            font-size: 16px;
-            font-weight: 700;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(135deg, #C7A27C, #B68258);
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-family: "Poppins", sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            overflow: hidden;
+          padding: 13px;
+          font-size: 15px;
+          border-radius: 10px;
         }
 
-        .auth-card button[type="submit"]::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s;
-        }
-
-        .auth-card button[type="submit"]:hover::before {
-            left: 100%;
-        }
-
-        .auth-card button[type="submit"]:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(199, 162, 124, 0.4);
-        }
-
-        .auth-card button[type="submit"]:active {
-            transform: translateY(-1px);
-        }
-
-        /* --------------------------------------
-            ERROR MESSAGE
-        ---------------------------------------*/
         .error {
-            padding: 14px 16px;
-            background: linear-gradient(135deg, #FFE5E5, #FFD4D4);
-            color: #C62828;
-            border-radius: 12px;
-            font-size: 14px;
-            margin-bottom: 20px;
-            animation: shake 0.4s ease;
-            border-left: 4px solid #C62828;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+          padding: 12px 14px;
+          font-size: 13px;
+          border-radius: 10px;
         }
 
-        .error::before {
-            content: "⚠️";
-            font-size: 18px;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            75% { transform: translateX(-5px); }
-        }
-
-        /* --------------------------------------
-            LOGIN LINK
-        ---------------------------------------*/
         .login-link {
-            margin-top: 25px;
-            text-align: center;
-            font-size: 14px;
-            color: #5A4A3B;
+          font-size: 13px;
+          margin-top: 20px;
         }
 
-        .login-link a {
-            color: #C7A27C;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            position: relative;
-            display: inline-block;
-        }
-
-        .login-link a::after {
-            content: "";
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #C7A27C, #B68258);
-            transition: width 0.3s ease;
-        }
-
-        .login-link a:hover::after {
-            width: 100%;
-        }
-
-        .login-link a:hover {
-            color: #B68258;
-        }
-
-        /* --------------------------------------
-            DIVIDER
-        ---------------------------------------*/
         .divider {
-            display: flex;
-            align-items: center;
-            margin: 25px 0;
-            opacity: 0.6;
+          margin: 20px 0;
+        }
+      }
+
+      @media (max-width: 360px) {
+        .logo-section h1 {
+          font-size: 26px;
         }
 
-        .divider::before,
-        .divider::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, transparent, #D4C8BB, transparent);
+        .auth-card {
+          padding: 25px 20px;
         }
 
-        .divider span {
-            padding: 0 15px;
-            font-size: 12px;
-            color: #9B8A7A;
-            font-weight: 600;
-            text-transform: uppercase;
+        .auth-card h2 {
+          font-size: 22px;
         }
 
-        /* --------------------------------------
-           MOBILE OPTIMIZATIONS
-        ---------------------------------------*/
-        @media(max-width: 768px) {
-            body {
-                padding: 15px;
-            }
-
-            .main-content {
-                padding-bottom: 30px;
-            }
-
-            .logo-section h1 {
-                font-size: 32px;
-            }
-
-            .auth-card {
-                padding: 35px 28px;
-            }
-
-            .auth-card h2 {
-                font-size: 26px;
-            }
+        .auth-card input {
+          padding: 12px 14px 12px 40px;
         }
-
-        @media(max-width: 480px) {
-            body {
-                padding: 10px;
-            }
-
-            .main-content {
-                padding-bottom: 20px;
-            }
-
-            .logo-section {
-                margin-bottom: 25px;
-            }
-
-            .logo-section h1 {
-                font-size: 28px;
-            }
-
-            .logo-section p {
-                font-size: 13px;
-            }
-
-            .auth-card {
-                padding: 30px 24px;
-                border-radius: 20px;
-            }
-
-            .auth-card h2 {
-                font-size: 24px;
-            }
-
-            .auth-card .subtitle {
-                font-size: 13px;
-                margin-bottom: 25px;
-            }
-
-            .input-group {
-                margin-bottom: 18px;
-            }
-
-            .input-group label {
-                font-size: 13px;
-                margin-bottom: 6px;
-            }
-
-            .auth-card input {
-                padding: 13px 14px 13px 42px;
-                font-size: 14px;
-                border-radius: 10px;
-            }
-
-            .input-icon {
-                font-size: 16px;
-                left: 14px;
-            }
-
-            .eye-toggle {
-                right: 14px;
-                font-size: 16px;
-            }
-
-            .auth-card button[type="submit"] {
-                padding: 13px;
-                font-size: 15px;
-                border-radius: 10px;
-            }
-
-            .error {
-                padding: 12px 14px;
-                font-size: 13px;
-                border-radius: 10px;
-            }
-
-            .login-link {
-                font-size: 13px;
-                margin-top: 20px;
-            }
-
-            .divider {
-                margin: 20px 0;
-            }
-        }
-
-        @media(max-width: 360px) {
-            .logo-section h1 {
-                font-size: 26px;
-            }
-
-            .auth-card {
-                padding: 25px 20px;
-            }
-
-            .auth-card h2 {
-                font-size: 22px;
-            }
-
-            .auth-card input {
-                padding: 12px 14px 12px 40px;
-            }
-        }
-
+      }
     </style>
-</head>
+  </head>
 
-<body>
-
-<div class="main-content">
-    <div class="signup-container">
+  <body>
+    <div class="main-content">
+      <div class="signup-container">
         <!-- Logo Section -->
         <div class="logo-section">
-            <h1>🛡️ LoanShield</h1>
-            <p>AI-Powered Risk Analysis Platform</p>
+          <h1>🛡️ LoanShield</h1>
+          <p>AI-Powered Risk Analysis Platform</p>
         </div>
 
         <!-- Signup Card -->
         <div class="auth-card">
-            <h2>Create Account</h2>
-            <p class="subtitle">Join us and start analyzing loan risks</p>
+          <h2>Create Account</h2>
+          <p class="subtitle">Join us and start analyzing loan risks</p>
 
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
+          {% if error %}
+          <p class="error">{{ error }}</p>
+          {% endif %}
 
-            <form method="POST">
-                <div class="input-group">
-                    <label>Username</label>
-                    <div class="input-wrapper">
-                        <input type="text" name="username" id="username" placeholder="Choose a username" required autocomplete="username" minlength="3">
-                        <span class="input-icon">👤</span>
-                    </div>
-                </div>
-
-                <div class="input-group">
-                    <label>Password</label>
-                    <div class="input-wrapper">
-                        <input type="password" name="password" id="signupPassword" placeholder="Create a strong password" required autocomplete="new-password" minlength="6" oninput="checkPasswordStrength()">
-                        <span class="input-icon">🔒</span>
-                        <button type="button" class="eye-toggle" id="eyeBtn" onclick="togglePassword()">👁️</button>
-                    </div>
-                    <div class="password-strength" id="passwordStrength">
-                        <div class="password-strength-bar" id="strengthBar"></div>
-                    </div>
-                    <p class="password-hint" id="passwordHint">Use at least 6 characters with letters & numbers</p>
-                </div>
-
-                <button type="submit">Create Account</button>
-            </form>
-
-            <div class="divider">
-                <span>or</span>
+          <form method="POST">
+            <div class="input-group">
+              <label>Username</label>
+              <div class="input-wrapper">
+                <input
+                  type="text"
+                  name="username"
+                  id="username"
+                  placeholder="Choose a username"
+                  required
+                  autocomplete="username"
+                  minlength="3"
+                />
+                <span class="input-icon">👤</span>
+              </div>
             </div>
 
-            <p class="login-link">
-                Already have an account? <a href="/login">Login here</a>
-            </p>
+            <div class="input-group">
+              <label>Password</label>
+              <div class="input-wrapper">
+                <input
+                  type="password"
+                  name="password"
+                  id="signupPassword"
+                  placeholder="Create a strong password"
+                  required
+                  autocomplete="new-password"
+                  minlength="6"
+                  oninput="checkPasswordStrength()"
+                />
+                <span class="input-icon">🔒</span>
+                <button
+                  type="button"
+                  class="eye-toggle"
+                  id="eyeBtn"
+                  onclick="togglePassword()"
+                >
+                  👁️
+                </button>
+              </div>
+              <div class="password-strength" id="passwordStrength">
+                <div class="password-strength-bar" id="strengthBar"></div>
+              </div>
+              <p class="password-hint" id="passwordHint">
+                Use at least 6 characters with letters & numbers
+              </p>
+            </div>
+
+            <button type="submit">Create Account</button>
+          </form>
+
+          <div class="divider">
+            <span>or</span>
+          </div>
+
+          <p class="login-link">
+            Already have an account? <a href="/login">Login here</a>
+          </p>
         </div>
+      </div>
     </div>
-</div>
 
-<!-- Footer -->
-{% include 'footer.html' %}
+    <!-- Footer -->
+    {% include 'footer.html' %}
 
-<script>
-function togglePassword() {
-    var passwordInput = document.getElementById('signupPassword');
-    var eyeBtn = document.getElementById('eyeBtn');
-    
-    if (passwordInput.type === 'password') {
-        passwordInput.type = 'text';
-        eyeBtn.textContent = '🙈';
-    } else {
-        passwordInput.type = 'password';
-        eyeBtn.textContent = '👁️';
-    }
-}
+    <script>
+      function togglePassword() {
+        var passwordInput = document.getElementById("signupPassword");
+        var eyeBtn = document.getElementById("eyeBtn");
 
-function checkPasswordStrength() {
-    var password = document.getElementById('signupPassword').value;
-    var strengthBar = document.getElementById('strengthBar');
-    var strengthContainer = document.getElementById('passwordStrength');
-    var hint = document.getElementById('passwordHint');
-    
-    if (password.length === 0) {
-        strengthContainer.classList.remove('active');
-        hint.classList.remove('active');
-        return;
-    }
-    
-    strengthContainer.classList.add('active');
-    hint.classList.add('active');
-    
-    var strength = 0;
-    
-    if (password.length >= 6) strength++;
-    if (password.length >= 10) strength++;
-    if (/\d/.test(password)) strength++;
-    if (/[a-zA-Z]/.test(password)) strength++;
-    if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
-    
-    strengthBar.className = 'password-strength-bar';
-    
-    if (strength <= 2) {
-        strengthBar.classList.add('strength-weak');
-        hint.textContent = '⚠️ Weak password. Add more characters, numbers or symbols';
-        hint.style.color = '#EF5350';
-    } else if (strength <= 4) {
-        strengthBar.classList.add('strength-medium');
-        hint.textContent = '✓ Good! Add special characters for better security';
-        hint.style.color = '#FFA726';
-    } else {
-        strengthBar.classList.add('strength-strong');
-        hint.textContent = '✓ Strong password! Youre all set';
-        hint.style.color = '#66BB6A';
-    }
-}
-</script>
+        if (passwordInput.type === "password") {
+          passwordInput.type = "text";
+          eyeBtn.textContent = "🙈";
+        } else {
+          passwordInput.type = "password";
+          eyeBtn.textContent = "👁️";
+        }
+      }
 
-</body>
+      function checkPasswordStrength() {
+        var password = document.getElementById("signupPassword").value;
+        var strengthBar = document.getElementById("strengthBar");
+        var strengthContainer = document.getElementById("passwordStrength");
+        var hint = document.getElementById("passwordHint");
+
+        if (password.length === 0) {
+          strengthContainer.classList.remove("active");
+          hint.classList.remove("active");
+          return;
+        }
+
+        strengthContainer.classList.add("active");
+        hint.classList.add("active");
+
+        var strength = 0;
+
+        if (password.length >= 6) strength++;
+        if (password.length >= 10) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[a-zA-Z]/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+
+        strengthBar.className = "password-strength-bar";
+
+        if (strength <= 2) {
+          strengthBar.classList.add("strength-weak");
+          hint.textContent =
+            "⚠️ Weak password. Add more characters, numbers or symbols";
+          hint.style.color = "#EF5350";
+        } else if (strength <= 4) {
+          strengthBar.classList.add("strength-medium");
+          hint.textContent =
+            "✓ Good! Add special characters for better security";
+          hint.style.color = "#FFA726";
+        } else {
+          strengthBar.classList.add("strength-strong");
+          hint.textContent = "✓ Strong password! Youre all set";
+          hint.style.color = "#66BB6A";
+        }
+      }
+    </script>
+  </body>
 </html>
