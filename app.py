@@ -3,8 +3,7 @@ import joblib
 import pandas as pd
 import os
 import sys
-import psycopg2
-from psycopg2.extras import RealDictCursor
+import sqlite3
 
 print("=" * 50)
 print("🚀 FLASK APP STARTING")
@@ -31,27 +30,14 @@ except Exception as e:
 
 
 # -------------------------------------------------
-# DATABASE CONNECTION (PostgreSQL)
+# DATABASE CONNECTION (SQLite)
 # -------------------------------------------------
 def get_db_connection():
-    """Get PostgreSQL connection from DATABASE_URL (Neon/Render compatible)"""
+    """Get SQLite connection for local database"""
     try:
-        database_url = os.environ.get('DATABASE_URL')
-
-        # Fix old postgres:// format (some providers use this)
-        if database_url:
-            database_url = database_url.replace("postgres://", "postgresql://")
-
-        # Render has no localhost DB, so DATABASE_URL is required
-        if not database_url:
-            print("❌ DATABASE_URL not found! Please set it in Render Environment Variables.")
-            return None
-
-        # IMPORTANT FIX:
-        # Don't rely on sslmode in URL, pass it directly to psycopg2
-        conn = psycopg2.connect(database_url, sslmode="require")
+        conn = sqlite3.connect("loan_database.db", check_same_thread=False)
+        conn.row_factory = sqlite3.Row  # To return dictionary-like rows
         return conn
-
     except Exception as e:
         print(f"❌ Database connection error: {e}")
         return None
@@ -59,7 +45,7 @@ def get_db_connection():
 
 
 def init_db():
-    """Initialize PostgreSQL tables"""
+    """Initialize SQLite tables"""
     try:
         conn = get_db_connection()
         if not conn:
@@ -71,22 +57,22 @@ def init_db():
         # USERS TABLE
         c.execute("""
             CREATE TABLE IF NOT EXISTS users (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 password TEXT NOT NULL
             )
         """)
 
         # DEFAULT ADMIN
-        c.execute("SELECT * FROM users WHERE username=%s", ("admin",))
+        c.execute("SELECT * FROM users WHERE username=?", ("admin",))
         if not c.fetchone():
-            c.execute("INSERT INTO users (username, password) VALUES (%s, %s)",
+            c.execute("INSERT INTO users (username, password) VALUES (?, ?)",
                       ("admin", "12345"))
 
         # HISTORY TABLE
         c.execute("""
             CREATE TABLE IF NOT EXISTS history (
-                id SERIAL PRIMARY KEY,
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT NOT NULL,
                 age REAL,
                 income REAL,
@@ -102,7 +88,7 @@ def init_db():
 
         conn.commit()
         conn.close()
-        print("✅ PostgreSQL database initialized successfully!")
+        print("✅ SQLite database initialized successfully!")
     except Exception as e:
         print(f"⚠️ Database initialization error: {e}")
 
@@ -113,7 +99,9 @@ init_db()
 # LOGIN HELPERS
 # -------------------------------------------------
 def login_required():
-    return "user" in session
+    if "user" not in session:
+        session["user"] = "guest"
+    return True
 
 
 def validate_user(username, password):
@@ -123,7 +111,7 @@ def validate_user(username, password):
             return False
 
         c = conn.cursor()
-        c.execute("SELECT * FROM users WHERE username=%s AND password=%s",
+        c.execute("SELECT * FROM users WHERE username=? AND password=?",
                   (username, password))
         user = c.fetchone()
         conn.close()
@@ -138,68 +126,18 @@ def validate_user(username, password):
 # -------------------------------------------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    if login_required():
-        return redirect(url_for("home"))
-
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        if validate_user(username, password):
-            session["user"] = username
-            return redirect(url_for("home"))
-
-        return render_template("login.html", error="Invalid username or password")
-
-    return render_template("login.html")
+    return redirect(url_for("predict_page"))
 
 
 @app.route("/signup", methods=["GET", "POST"])
 def signup():
-    if login_required():
-        return redirect(url_for("home"))
-
-    if request.method == "POST":
-        username = request.form["username"]
-        password = request.form["password"]
-
-        # Validate inputs
-        if not username or not password:
-            return render_template("signup.html", error="Username and password are required!")
-
-        if len(username) < 3:
-            return render_template("signup.html", error="Username must be at least 3 characters!")
-
-        if len(password) < 5:
-            return render_template("signup.html", error="Password must be at least 5 characters!")
-
-        try:
-            conn = get_db_connection()
-            if not conn:
-                return render_template("signup.html", error="Database connection error!")
-
-            c = conn.cursor()
-            c.execute("INSERT INTO users (username, password) VALUES (%s, %s)",
-                      (username, password))
-
-            conn.commit()
-            conn.close()
-            print(f"✅ New user registered: {username}")
-            return redirect(url_for("login"))
-
-        except psycopg2.IntegrityError:
-            return render_template("signup.html", error="Username already exists!")
-        except Exception as e:
-            print(f"❌ Signup error: {e}")
-            return render_template("signup.html", error=f"An error occurred: {str(e)}")
-
-    return render_template("signup.html")
+    return redirect(url_for("predict_page"))
 
 
 @app.route("/logout")
 def logout():
     session.clear()
-    return redirect(url_for("login"))
+    return redirect(url_for("predict_page"))
 
 
 # -------------------------------------------------
@@ -208,7 +146,7 @@ def logout():
 @app.route("/")
 def home():
     if not login_required():
-        return redirect(url_for("login"))
+        return redirect(url_for("predict_page"))
 
     try:
         conn = get_db_connection()
@@ -251,7 +189,7 @@ def home():
 @app.route("/predict", methods=["GET"])
 def predict_page():
     if not login_required():
-        return redirect(url_for("login"))
+        return redirect(url_for("predict_page"))
     return render_template("predict.html")
 
 
@@ -306,7 +244,7 @@ def predict():
             c = conn.cursor()
             c.execute("""
                 INSERT INTO history (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction)
-                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             """, (username, age, income, loan_amount, credit_score, dti_ratio, education, employment, prediction))
 
             conn.commit()
@@ -336,9 +274,9 @@ def dashboard():
         if not conn:
             return render_template("dashboard.html", history=[], safe=0, danger=0, total=0)
 
-        # Get history for current user using DictCursor for easy conversion
-        c = conn.cursor(cursor_factory=RealDictCursor)
-        c.execute("SELECT * FROM history WHERE username = %s ORDER BY created_at DESC", (username,))
+        # Get history for current user
+        c = conn.cursor()
+        c.execute("SELECT * FROM history WHERE username = ? ORDER BY created_at DESC", (username,))
         rows = c.fetchall()
         conn.close()
 
@@ -364,6 +302,24 @@ def dashboard():
         return render_template("dashboard.html", history=[], safe=0, danger=0, total=0)
 
 
+@app.route("/delete_prediction/<int:pred_id>", methods=["POST", "GET"])
+def delete_prediction(pred_id):
+    if not login_required():
+        return redirect(url_for("login"))
+    try:
+        username = session.get("user")
+        conn = get_db_connection()
+        if conn:
+            c = conn.cursor()
+            # Double check the prediction belongs to this user just in case
+            c.execute("DELETE FROM history WHERE id = ? AND username = ?", (pred_id, username))
+            conn.commit()
+            conn.close()
+            print(f"🗑️ Deleted prediction {pred_id} for {username}")
+    except Exception as e:
+        print(f"❌ Error deleting prediction: {e}")
+    return redirect(url_for("dashboard"))
+
 @app.route("/about")
 def about():
     if not login_required():
@@ -371,25 +327,6 @@ def about():
     return render_template("about.html")
 
 
-@app.route("/contact")
-def contact():
-    if not login_required():
-        return redirect(url_for("login"))
-    return render_template("contact.html")
-
-
-@app.route("/send_message", methods=["POST"])
-def send_message():
-    name = request.form["name"]
-    email = request.form["email"]
-    message = request.form["message"]
-
-    print("📩 New Contact Message")
-    print("Name:", name)
-    print("Email:", email)
-    print("Message:", message)
-
-    return render_template("contact.html", sent=True)
 
 
 # -------------------------------------------------

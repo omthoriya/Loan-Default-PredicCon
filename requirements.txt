@@ -1,8 +1,7 @@
 flask
 numpy
 pandas
-scikit-learn
 joblib
 gunicorn
 psycopg2-binary
-
+scikit-learn

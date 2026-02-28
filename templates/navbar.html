@@ -1,46 +1,13 @@
-<nav class="navbar fade-in">
+<nav class="navbar">
     <div class="nav-container">
-        <!-- Professional Logo -->
-        <div class="logo-container">
-            <svg width="180" height="50" viewBox="0 0 180 50" xmlns="http://www.w3.org/2000/svg" class="logo-svg">
-                <!-- Shield with Gradient -->
-                <defs>
-                    <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-                        <stop offset="0%" style="stop-color:#C7A27C;stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#8B5E2E;stop-opacity:1" />
-                    </linearGradient>
-                    <filter id="logoShadow">
-                        <feDropShadow dx="0" dy="1" stdDeviation="2" flood-opacity="0.3"/>
-                    </filter>
-                </defs>
-                
-                <!-- Shield Shape -->
-                <path d="M 22 6 L 30 6 C 30 6 33 7.5 33 10.5 L 33 21 C 33 21 33 28.5 26 33 C 26 33 22 35 22 35 C 22 35 18 33 18 33 C 11 28.5 11 21 11 21 L 11 10.5 C 11 7.5 14 6 14 6 Z" 
-                      fill="url(#shieldGrad)" 
-                      filter="url(#logoShadow)"/>
-                
-                <!-- Dollar Sign -->
-                <text x="22" y="24" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="#FFFFFF" text-anchor="middle">$</text>
-                
-                <!-- Check Mark -->
-                <path d="M 19 19 L 21 22 L 25.5 16.5" 
-                      stroke="#FFFFFF" 
-                      stroke-width="2" 
-                      fill="none" 
-                      stroke-linecap="round" 
-                      stroke-linejoin="round"/>
-                
-                <!-- Text -->
-                <text x="40" y="22" font-family="'Poppins', Arial, sans-serif" font-size="18" font-weight="700" fill="#8B5E2E">
-                    Loan<tspan fill="#C7A27C">Shield</tspan>
-                </text>
-                
-                <!-- Tagline (hidden on mobile) -->
-                <text x="40" y="33" font-family="'Poppins', Arial, sans-serif" font-size="7" font-weight="500" fill="#A0826D" letter-spacing="0.5" class="logo-tagline">
-                    AI-POWERED RISK ANALYSIS
-                </text>
-            </svg>
-        </div>
+        <!-- Modern Logo -->
+        <a href="/" class="logo" style="text-decoration:none;">
+            <div class="logo-box">
+                <span class="logo-text">L</span>
+                <span class="logo-text-shield">S</span>
+            </div>
+            <span class="brand-name">Loan<span class="brand-highlight">Shield</span></span>
+        </a>
 
         <!-- Hamburger (Mobile) -->
         <div class="hamburger">
@@ -51,53 +18,202 @@
 
         <!-- Navigation Menu -->
         <ul class="nav-links">
-            <li><a href="/" class="nav-item {{ 'active' if request.path == '/' else '' }}">Home</a></li>
-            <li><a href="/predict" class="nav-item {{ 'active' if request.path == '/predict' else '' }}">Predict</a></li>
-            <li><a href="/dashboard" class="nav-item {{ 'active' if request.path == '/dashboard' else '' }}">Dashboard</a></li>
-            <li><a href="/about" class="nav-item {{ 'active' if request.path == '/about' else '' }}">About</a></li>
-            <li><a href="/contact" class="nav-item {{ 'active' if request.path == '/contact' else '' }}">Contact</a></li>
-            <li>
-                <a class="logout-btn" href="/logout" style="background: linear-gradient(135deg, #C7A27C, #B68258); color: white; padding: 8px 20px; border-radius: 8px; transition: all 0.3s;">Logout</a>
+            <li><a href="/" class="nav-item {% if request.path == '/' %}active{% endif %}">Home</a></li>
+            <li><a href="/predict" class="nav-item {% if request.path == '/predict' %}active{% endif %}">Predict</a>
             </li>
+            <li><a href="/dashboard"
+                    class="nav-item {% if request.path == '/dashboard' %}active{% endif %}">Dashboard</a></li>
+            <li><a href="/about" class="nav-item {% if request.path == '/about' %}active{% endif %}">About</a></li>
         </ul>
     </div>
 </nav>
 
 <style>
-    .logo-container {
+    .navbar {
+        width: 100%;
+        padding: 15px 40px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px) saturate(200%);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.4s ease;
+    }
+
+    .navbar.scrolled {
+        padding: 12px 40px;
+        background: rgba(255, 255, 255, 0.95);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-container {
+        width: 100%;
+        max-width: 1200px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
         display: flex;
         align-items: center;
+        gap: 12px;
         cursor: pointer;
-        transition: all 0.3s ease;
     }
 
-    .logo-container:hover {
-        transform: translateY(-2px);
+    .logo-box {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        background: linear-gradient(135deg, #0ea5e9, #3b82f6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 800;
+        box-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
     }
 
-    .logo-svg {
-        height: 45px;
-        width: auto;
+    .logo-text {
+        color: white;
+        font-size: 16px;
     }
 
-    .logout-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 15px rgba(199, 162, 124, 0.4);
+    .logo-text-shield {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 14px;
+        margin-left: -2px;
     }
 
-    @media(max-width: 850px) {
-        .logo-svg {
-            height: 38px;
+    .brand-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 22px;
+        font-weight: 700;
+        color: #0f172a;
+        letter-spacing: -0.5px;
+    }
+
+    .brand-highlight {
+        color: #3b82f6;
+    }
+
+    .nav-links {
+        display: flex;
+        list-style: none;
+        gap: 30px;
+        align-items: center;
+    }
+
+    .nav-links li a {
+        text-decoration: none;
+        font-weight: 500;
+        color: #475569;
+        font-size: 15px;
+        font-family: 'Inter', sans-serif;
+        transition: all 0.3s;
+        padding: 5px 0;
+        position: relative;
+    }
+
+    .nav-links li a::before {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #3b82f6;
+        transition: width 0.3s ease;
+        border-radius: 2px;
+    }
+
+    .nav-links li a:hover::before {
+        width: 100%;
+    }
+
+    .nav-links li a:hover {
+        color: #0f172a;
+    }
+
+    .nav-links .active {
+        color: #3b82f6 !important;
+        font-weight: 600;
+    }
+
+    .nav-links .active::before {
+        width: 100%;
+        background: #0ea5e9;
+    }
+
+    /* MOBILE NAV */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        cursor: pointer;
+        gap: 5px;
+    }
+
+    .hamburger span {
+        width: 25px;
+        height: 2px;
+        background: #0f172a;
+        border-radius: 2px;
+        transition: 0.4s ease;
+    }
+
+    @media(max-width: 768px) {
+        .navbar {
+            padding: 15px 20px;
         }
-        
-        .logo-tagline {
+
+        .hamburger {
+            display: flex;
+        }
+
+        .nav-links {
+            position: absolute;
+            top: 60px;
+            right: 0;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(15px);
+            padding: 30px;
+            flex-direction: column;
+            gap: 20px;
             display: none;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
         }
-    }
 
-    @media(max-width: 600px) {
-        .logo-svg {
-            height: 35px;
+        .nav-links.active {
+            display: flex;
+        }
+
+        .hamburger.open span:nth-child(1) {
+            transform: rotate(45deg) translateY(7.5px) translateX(7.5px);
+        }
+
+        .hamburger.open span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.open span:nth-child(3) {
+            transform: rotate(-45deg) translateY(-7.5px) translateX(7.5px);
         }
     }
 </style>
+<script>
+    document.querySelector('.hamburger').addEventListener('click', function () {
+        this.classList.toggle('open');
+        document.querySelector('.nav-links').classList.toggle('active');
+    });
+
+    window.addEventListener('scroll', function () {
+        if (window.scrollY > 50) document.querySelector('.navbar').classList.add('scrolled');
+        else document.querySelector('.navbar').classList.remove('scrolled');
+    });
+</script>

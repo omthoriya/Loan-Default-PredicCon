@@ -1,261 +1,458 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LoanShield - Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=19">
+
     <style>
+        /* UNIQUE HOME THEME - VIBRANT PREMIUM LIGHT */
         body {
-            background: linear-gradient(135deg, #f8f4ef, #f6ece3, #fbf7f2);
-            background-size: 400% 400%;
-            animation: bgShift 16s ease infinite;
+            background-color: #f8fafc;
+            /* Very clean white slate */
         }
 
-        @keyframes bgShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .hero {
-            padding: 60px 20px;
+        .home-wrapper {
+            position: relative;
+            overflow: hidden;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            gap: 60px;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 0 5%;
         }
 
-        .hero-text {
+        /* Ambient Glowing Orbs - Light Mode Version */
+        .glow-orb-1 {
+            position: absolute;
+            top: 10%;
+            left: -5%;
+            width: 450px;
+            height: 450px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            filter: blur(50px);
+            z-index: 0;
+            animation: floatOrb 8s ease-in-out infinite;
+        }
+
+        .glow-orb-2 {
+            position: absolute;
+            bottom: -10%;
+            right: -5%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            animation: floatOrb 10s ease-in-out infinite reverse;
+        }
+
+        @keyframes floatOrb {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-30px) scale(1.05);
+            }
+        }
+
+        .hero-layout {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            max-width: 1200px;
+            z-index: 10;
+            gap: 50px;
+        }
+
+        .hero-content {
             flex: 1;
             max-width: 600px;
+            animation: heroFadeIn 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(30px);
         }
 
-        .badge {
-            background: linear-gradient(135deg, #E8D4BC, #D4C2A8);
-            padding: 8px 18px;
-            border-radius: 22px;
-            font-size: 14px;
-            color: #523A28;
-            display: inline-block;
-            margin-bottom: 15px;
-            box-shadow: 0 4px 12px rgba(232,212,188,0.4);
+        @keyframes heroFadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .hero-text h1 {
-            font-size: 52px;
-            font-weight: 700;
-            color: #3A2F2F;
-            line-height: 1.2;
-            margin: 20px 0;
+        .hero-badge {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: #2563eb;
+            padding: 6px 16px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
         }
 
-        .highlight {
-            background: linear-gradient(135deg, #C28E5A 0%, #B68258 100%);
+        .hero-title {
+            font-size: 64px;
+            font-weight: 800;
+            line-height: 1.1;
+            color: #0f172a;
+            /* Slate 900 for high contrast */
+            margin-bottom: 25px;
+            letter-spacing: -1.5px;
+        }
+
+        .hero-title .highlight {
+            background: linear-gradient(135deg, #2563eb, #7c3aed, #ec4899);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
+            position: relative;
         }
 
-        .hero-text p {
+        .hero-desc {
             font-size: 18px;
-            line-height: 1.7;
-            color: #5A4A3B;
-            margin: 20px 0;
+            color: #475569;
+            /* Slate 600 */
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 400;
         }
 
-        .hero-buttons {
+        .hero-actions {
             display: flex;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .stats {
-            display: flex;
-            gap: 25px;
-            margin-top: 40px;
-            flex-wrap: wrap;
-        }
-
-        .stat-box {
-            background: rgba(255,255,255,0.8);
-            backdrop-filter: blur(10px);
-            padding: 18px 24px;
+        .btn-modern {
+            padding: 14px 28px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            text-align: center;
-            min-width: 140px;
-            transition: all 0.3s ease;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
         }
 
-        .stat-box:hover {
-            transform: translateY(-5px) scale(1.02);
-            box-shadow: 0 10px 25px rgba(199,162,124,0.25);
+        .btn-glow {
+            background: linear-gradient(135deg, #2563eb, #7c3aed);
+            color: white;
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+            border: none;
         }
 
-        .stat-box h2 {
+        .btn-glow:hover {
+            box-shadow: 0 12px 35px rgba(99, 102, 241, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .btn-glass {
+            background: rgba(255, 255, 255, 0.7);
+            color: #0f172a;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .btn-glass:hover {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .stats-stripe {
+            display: flex;
+            gap: 40px;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .stat-value {
             font-size: 32px;
-            color: #C28E5A;
-            margin: 0 0 5px 0;
+            font-family: 'Outfit', sans-serif;
             font-weight: 700;
+            color: #0f172a;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
-        .stat-box p {
-            font-size: 14px;
-            color: #5A4A3B;
-            margin: 0;
-            font-weight: 500;
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
         }
 
-        .hero-image {
+        .hero-visual {
             flex: 1;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
 
-        .hero-image img {
+        /* Techy Abstract Element instead of simple image for wow factor */
+        .glass-card {
             width: 100%;
-            max-width: 500px;
-            display: block;
-            filter: drop-shadow(0 15px 30px rgba(0,0,0,0.15));
+            max-width: 450px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+            animation: heroFadeIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .glass-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            bottom: -50%;
+            left: -50%;
+            background: conic-gradient(from 0deg, transparent 0 340deg, rgba(59, 130, 246, 0.15) 360deg);
+            animation: rotateCardBg 4s linear infinite;
+            z-index: 1;
+        }
+
+        @keyframes rotateCardBg {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .glass-inner {
+            background: rgba(255, 255, 255, 0.9);
+            position: absolute;
+            inset: 2px;
+            border-radius: 22px;
+            z-index: 2;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .mock-chart {
+            flex: 1;
+            border-radius: 12px;
+            background: linear-gradient(180deg, rgba(59, 130, 246, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+            border: 1px dashed rgba(59, 130, 246, 0.2);
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            padding: 20px;
+        }
+
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #3b82f6, #8b5cf6);
+            border-radius: 4px 4px 0 0;
+            animation: growBar 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            transform-origin: bottom;
+            transform: scaleY(0);
+        }
+
+        .bar:nth-child(1) {
+            animation-delay: 0.1s;
+            height: 40%;
+        }
+
+        .bar:nth-child(2) {
+            animation-delay: 0.2s;
+            height: 70%;
+        }
+
+        .bar:nth-child(3) {
+            animation-delay: 0.3s;
+            height: 30%;
+        }
+
+        .bar:nth-child(4) {
+            animation-delay: 0.4s;
+            height: 90%;
+        }
+
+        .bar:nth-child(5) {
+            animation-delay: 0.5s;
+            height: 60%;
+        }
+
+        @keyframes growBar {
+            to {
+                transform: scaleY(1);
+            }
+        }
+
+        .mock-text-line {
+            height: 12px;
+            border-radius: 6px;
+            background: rgba(0, 0, 0, 0.05);
+            width: 100%;
+        }
+
+        .mock-text-line.short {
+            width: 60%;
         }
 
         @media(max-width: 950px) {
-            .hero {
-                flex-direction: column-reverse;
+            .hero-layout {
+                flex-direction: column;
                 text-align: center;
-                gap: 40px;
-                padding: 40px 20px;
+                gap: 60px;
+                padding-top: 100px;
             }
 
-            .hero-text {
-                max-width: 100%;
+            .hero-content {
+                align-items: center;
+                display: flex;
+                flex-direction: column;
             }
 
-            .hero-text h1 {
-                font-size: 42px;
+            .hero-title {
+                font-size: 48px;
             }
 
-            .hero-buttons {
+            .stats-stripe {
                 justify-content: center;
-            }
-
-            .stats {
-                justify-content: center;
-            }
-
-            .hero-image img {
-                max-width: 400px;
             }
         }
 
         @media(max-width: 600px) {
-            .hero {
-                padding: 30px 15px;
-                gap: 30px;
+            .hero-title {
+                font-size: 36px;
             }
 
-            .hero-text h1 {
-                font-size: 32px;
-            }
-
-            .hero-text p {
-                font-size: 16px;
-            }
-
-            .badge {
-                font-size: 12px;
-                padding: 6px 14px;
-            }
-
-            .hero-buttons {
+            .hero-actions {
                 flex-direction: column;
                 width: 100%;
             }
 
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                text-align: center;
+            .stats-stripe {
+                flex-wrap: wrap;
+                gap: 20px;
             }
 
-            .stats {
-                gap: 15px;
-            }
-
-            .stat-box {
-                min-width: 110px;
-                padding: 15px 18px;
-            }
-
-            .stat-box h2 {
-                font-size: 26px;
-            }
-
-            .stat-box p {
-                font-size: 12px;
-            }
-
-            .hero-image img {
-                max-width: 300px;
+            .glass-card {
+                height: 350px;
             }
         }
     </style>
 </head>
 
-<body class="fade-in">
+<body>
     {% include 'navbar.html' %}
 
-    <div class="page-container">
-        <div class="hero">
-            <!-- Left: Hero Text -->
-            <div class="hero-text scroll-reveal">
-                <span class="badge">AI-Powered Loan Risk Assessment</span>
-                <h1>
-                    Advanced Loan <br>
-                    <span class="highlight">Default Prediction</span>
+    <div class="glow-orb-1"></div>
+    <div class="glow-orb-2"></div>
+
+    <div class="home-wrapper">
+        <div class="hero-layout">
+
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span style="font-size: 16px;">✦</span> AI-Powered Analytics
+                </div>
+                <h1 class="hero-title">
+                    Intelligent Loan <br>
+                    <span class="highlight">Risk Assessment</span>
                 </h1>
-                <p>
-                    Analyze financial data using cutting-edge AI and instantly predict the risk 
-                    of loan default with high accuracy.
+                <p class="hero-desc">
+                    Leverage state-of-the-art machine learning models to instantly predict loan default risks. Secure
+                    your financial future with precision data analysis.
                 </p>
 
-                <div class="hero-buttons">
-                    <a href="/predict" class="btn-primary">Start Prediction →</a>
-                    <a href="/dashboard" class="btn-secondary">View History</a>
+                <div class="hero-actions">
+                    <a href="/predict" class="btn-modern btn-glow">Start Predicting →</a>
+                    <a href="/dashboard" class="btn-modern btn-glass">View Dashboard</a>
                 </div>
 
-                <!-- Real-time Stats -->
-                <div class="stats">
-                    <div class="stat-box scroll-reveal stagger-child">
-                        <h2>{{ total_predictions }}</h2>
-                        <p>Total Predictions</p>
+                <div class="stats-stripe">
+                    <div class="stat-item">
+                        <span class="stat-value">{{ total_predictions }}</span>
+                        <span class="stat-label">Total Predictions</span>
                     </div>
-
-                    <div class="stat-box scroll-reveal stagger-child">
-                        <h2>{{ total_users }}</h2>
-                        <p>Total Users</p>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ total_users }}</span>
+                        <span class="stat-label">Total Users</span>
                     </div>
-
-                    <div class="stat-box scroll-reveal stagger-child">
-                        <h2>{{ avg_response_time }}</h2>
-                        <p>Avg Response Time</p>
+                    <div class="stat-item">
+                        <span class="stat-value">{{ avg_response_time }}</span>
+                        <span class="stat-label">Avg Latency</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Right: Hero Image -->
-            <div class="hero-image scroll-reveal-right">
-                <img src="{{ url_for('static', filename='img/home.png') }}" alt="Loan Risk Assessment">
+            <div class="hero-visual">
+                <div class="glass-card">
+                    <div class="glass-inner">
+                        <div
+                            style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <div style="font-family:'Outfit'; font-weight:700; color:#0f172a; font-size:20px;">Risk
+                                Model</div>
+                            <div
+                                style="width:10px; height:10px; border-radius:50%; background:#10b981; box-shadow: 0 0 10px rgba(16,185,129,0.5);">
+                            </div>
+                        </div>
+                        <div class="mock-text-line"></div>
+                        <div class="mock-text-line short"></div>
+
+                        <div class="mock-chart">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </div>
+
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <div
+                                style="flex:1; background:rgba(0,0,0,0.03); border-radius:8px; padding:15px; text-align:center; border: 1px solid rgba(0,0,0,0.05);">
+                                <div style="font-size:12px; color:#64748b; font-weight:600;">Accuracy</div>
+                                <div style="font-size:24px; font-weight:700; color:#2563eb; font-family:'Outfit'">98.4%
+                                </div>
+                            </div>
+                            <div
+                                style="flex:1; background:rgba(0,0,0,0.03); border-radius:8px; padding:15px; text-align:center; border: 1px solid rgba(0,0,0,0.05);">
+                                <div style="font-size:12px; color:#64748b; font-weight:600;">Status</div>
+                                <div style="font-size:24px; font-weight:700; color:#10b981; font-family:'Outfit'">Live
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
+
         </div>
     </div>
 
-    {% include 'footer.html' %}
-    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
 </body>
+
 </html>

@@ -1,399 +1,341 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LoanShield - Prediction Result</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=14">
-    
-    <!-- jsPDF Library for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LoanShield - Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}?v=19" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-    <style>
-        body {
-            background: linear-gradient(135deg, #f8f4ef, #f6ece3, #fbf7f2);
-            background-size: 400% 400%;
-            animation: bgShift 16s ease infinite;
-        }
+  <style>
+    /* UNIQUE RESULT THEME - PREMIUM LIGHT CARD PRESENTATION */
+    body {
+      background-color: #f8fafc;
+      background-image:
+        linear-gradient(to right,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px),
+        linear-gradient(to bottom,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px);
+      background-size: 50px 50px;
+    }
 
-        @keyframes bgShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+    .result-wrapper {
+      max-width: 700px;
+      margin: 0 auto;
+      width: 100%;
+    }
 
-        .result-container {
-            max-width: 700px;
-            margin: 50px auto;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            text-align: center;
-            animation: slideUp 0.8s ease;
-        }
+    .result-card {
+      background: #ffffff;
+      border-radius: 24px;
+      padding: 40px;
+      position: relative;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
 
-        .result-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            animation: bounceIn 0.6s ease;
-        }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
 
-        @keyframes bounceIn {
-            0% { transform: scale(0); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
+    .safe-glow {
+      box-shadow: 0 10px 40px rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
 
-        .result-title {
-            font-size: 36px;
-            font-weight: 700;
-            margin-bottom: 15px;
-            color: #3A2F2F;
-        }
+    .danger-glow {
+      box-shadow: 0 10px 40px rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.2);
+    }
 
-        .result-message {
-            font-size: 18px;
-            color: #5A4A3B;
-            margin-bottom: 30px;
-            line-height: 1.6;
-        }
+    .result-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
 
-        .result-details {
-            background: #FAF7F2;
-            padding: 25px;
-            border-radius: 15px;
-            margin: 25px 0;
-            text-align: left;
-        }
+    .icon-circle {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px;
+      color: white;
+    }
 
-        .result-details h3 {
-            color: #6A4C36;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
+    .safe-circle {
+      background: linear-gradient(135deg, #34d399, #059669);
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
 
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #e8e0d5;
-        }
+    .danger-circle {
+      background: linear-gradient(135deg, #f87171, #dc2626);
+      box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+    }
 
-        .detail-row:last-child {
-            border-bottom: none;
-        }
+    .title {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
 
-        .detail-label {
-            font-weight: 600;
-            color: #6A4C36;
-        }
+    .message {
+      color: #475569;
+      font-size: 16px;
+      line-height: 1.6;
+    }
 
-        .detail-value {
-            color: #5A4A3B;
-        }
+    .details-box {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 16px;
+      padding: 25px;
+      margin-bottom: 30px;
+    }
 
-        .action-buttons {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 30px;
-        }
+    .detail-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid #e2e8f0;
+    }
 
-        .btn-download {
-            padding: 13px 26px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-size: 16px;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, #4CAF50, #45a049);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
-        }
+    .detail-row:last-child {
+      border-bottom: none;
+    }
 
-        .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.5);
-        }
+    .detail-label {
+      color: #64748b;
+      font-weight: 500;
+    }
 
-        .safe-result {
-            background: linear-gradient(135deg, #D4F8D4, #B8E6B8);
-        }
+    .detail-value {
+      color: #0f172a;
+      font-weight: 700;
+      font-family: "Outfit";
+    }
 
-        .danger-result {
-            background: linear-gradient(135deg, #FFD4D4, #FFBBBB);
-        }
+    .action-row {
+      display: flex;
+      gap: 15px;
+      margin-top: 30px;
+    }
 
-        .recommendations {
-            background: #FFF9F0;
-            padding: 20px;
-            border-radius: 12px;
-            margin-top: 20px;
-            border-left: 4px solid #C7A27C;
-        }
+    @media (max-width: 600px) {
+      .action-row {
+        flex-direction: column;
+      }
 
-        .recommendations h4 {
-            color: #6A4C36;
-            margin-bottom: 10px;
-        }
+      .result-card {
+        padding: 30px 20px;
+      }
+    }
 
-        .recommendations ul {
-            text-align: left;
-            color: #5A4A3B;
-            line-height: 1.8;
-        }
+    .btn {
+      flex: 1;
+      padding: 15px;
+      text-align: center;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 15px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: "Outfit";
+    }
 
-        @media(max-width: 600px) {
-            .result-container {
-                padding: 30px 20px;
-                margin: 30px 15px;
-            }
+    .btn-dl {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
 
-            .result-icon {
-                font-size: 60px;
-            }
+    .btn-dl:hover {
+      background: #2563eb;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.4);
+    }
 
-            .result-title {
-                font-size: 28px;
-            }
+    .btn-sec {
+      background: white;
+      color: #0f172a;
+      border: 1px solid #cbd5e1;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
 
-            .result-message {
-                font-size: 16px;
-            }
-
-            .action-buttons {
-                flex-direction: column;
-            }
-
-            .btn-download,
-            .btn-primary,
-            .btn-secondary {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-    </style>
+    .btn-sec:hover {
+      background: #f8fafc;
+      border-color: #94a3b8;
+    }
+  </style>
 </head>
 
-<body class="fade-in">
-    {% include 'navbar.html' %}
+<body>
+  {% include 'navbar.html' %}
 
-    <div class="page-container">
-        <div class="result-container {% if prediction == 0 %}safe-result{% else %}danger-result{% endif %}">
-            
-            <div class="result-icon">
-                {% if prediction == 0 %}
-                    ✅
-                {% else %}
-                    ⚠️
-                {% endif %}
-            </div>
-
-            <h1 class="result-title">
-                {% if prediction == 0 %}
-                    Loan Approved - Low Risk
-                {% else %}
-                    High Default Risk Detected
-                {% endif %}
-            </h1>
-
-            <p class="result-message">
-                {% if prediction == 0 %}
-                    Great news! Based on our AI analysis, this loan application shows <strong>low risk</strong> characteristics. 
-                    The applicant demonstrates strong financial indicators.
-                {% else %}
-                    Our AI model has detected <strong>high default risk</strong> for this application. 
-                    We recommend careful review before proceeding.
-                {% endif %}
-            </p>
-
-            <!-- Loan Details Section -->
-            <div class="result-details">
-                <h3>📊 Application Details</h3>
-                <div class="detail-row">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value" id="detail-age">{{ session.get('last_prediction', {}).get('age', 'N/A') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Income:</span>
-                    <span class="detail-value" id="detail-income">${{ "{:,.2f}".format(session.get('last_prediction', {}).get('income', 0)) }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Loan Amount:</span>
-                    <span class="detail-value" id="detail-loan">${{ "{:,.2f}".format(session.get('last_prediction', {}).get('loan_amount', 0)) }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Credit Score:</span>
-                    <span class="detail-value" id="detail-credit">{{ session.get('last_prediction', {}).get('credit_score', 'N/A') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">DTI Ratio:</span>
-                    <span class="detail-value" id="detail-dti">{{ session.get('last_prediction', {}).get('dti_ratio', 'N/A') }}%</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Education:</span>
-                    <span class="detail-value" id="detail-education">{{ session.get('last_prediction', {}).get('education', 'N/A') }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="detail-label">Employment:</span>
-                    <span class="detail-value" id="detail-employment">{{ session.get('last_prediction', {}).get('employment', 'N/A') }}</span>
-                </div>
-            </div>
-
-            <!-- Recommendations -->
-            <div class="recommendations">
-                <h4>💡 Recommendations</h4>
-                <ul>
-                    {% if prediction == 0 %}
-                        <li>Applicant shows strong financial stability</li>
-                        <li>Credit score is in healthy range</li>
-                        <li>Income-to-loan ratio is favorable</li>
-                        <li>Consider standard approval process</li>
-                    {% else %}
-                        <li>Request additional documentation</li>
-                        <li>Consider requiring a co-signer</li>
-                        <li>Review recent credit history in detail</li>
-                        <li>Possibly offer with higher interest rate or lower amount</li>
-                    {% endif %}
-                </ul>
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="action-buttons">
-                <button class="btn-download" onclick="downloadPDF()">
-                    📄 Download PDF Report
-                </button>
-                <a href="/predict" class="btn-primary">
-                    ← New Prediction
-                </a>
-                <a href="/dashboard" class="btn-secondary">
-                    View Dashboard
-                </a>
-            </div>
+  <div class="page-wrapper" style="padding: 130px 20px 50px">
+    <div class="result-wrapper">
+      <div class="result-card {% if prediction == 0 %}safe-glow{% else %}danger-glow{% endif %}">
+        <div class="result-header">
+          {% if prediction == 0 %}
+          <div class="icon-circle safe-circle">✓</div>
+          <h1 class="title" style="color: #059669">Low Risk Application</h1>
+          <p class="message">
+            The AI analysis has cleared this profile. Financial indicators
+            reflect a <strong>strong capability for repayment</strong>.
+          </p>
+          {% else %}
+          <div class="icon-circle danger-circle">!</div>
+          <h1 class="title" style="color: #dc2626">High Risk Detected</h1>
+          <p class="message">
+            The model has flagged this application. Indicators suggest a
+            <strong>higher probability of default</strong>. Review carefully.
+          </p>
+          {% endif %}
         </div>
+
+        <div class="details-box">
+          <div style="
+                font-family: &quot;Outfit&quot;;
+                font-size: 18px;
+                font-weight: 800;
+                color: #0f172a;
+                margin-bottom: 15px;
+              ">
+            Input Parameters
+          </div>
+
+          <div class="detail-row">
+            <span class="detail-label">Age</span>
+            <span class="detail-value" id="detail-age">{{ session.get('last_prediction', dict()).get('age', 'N/A')
+              }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Annual Income</span>
+            <span class="detail-value" id="detail-income">₹ {{ "{:,.0f}".format(session.get('last_prediction',
+              dict()).get('income', 0)) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Loan Amount</span>
+            <span class="detail-value" id="detail-loan">₹ {{ "{:,.0f}".format(session.get('last_prediction',
+              dict()).get('loan_amount', 0)) }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Credit Score</span>
+            <span class="detail-value" id="detail-credit">{{ session.get('last_prediction', dict()).get('credit_score',
+              'N/A') }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">DTI Ratio</span>
+            <span class="detail-value" id="detail-dti">{{ session.get('last_prediction', dict()).get('dti_ratio',
+              'N/A') }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Education</span>
+            <span class="detail-value" id="detail-education">{{ session.get('last_prediction', dict()).get('education',
+              'N/A') }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Employment</span>
+            <span class="detail-value" id="detail-employment">{{ session.get('last_prediction',
+              dict()).get('employment',
+              'N/A') }}</span>
+          </div>
+        </div>
+
+        <div class="action-row">
+          <button class="btn btn-dl" onclick="downloadPDF()">
+            Download Report
+          </button>
+          <a href="/predict" class="btn btn-sec">New Analysis</a>
+          <a href="/dashboard" class="btn btn-sec">Dashboard</a>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <script>
-        function downloadPDF() {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-            
-            // Get current date
-            const date = new Date().toLocaleDateString();
-            
-            // Get prediction result
-            const isPrediction = {{ prediction }};
-            const result = isPrediction === 0 ? 'LOW RISK - APPROVED' : 'HIGH RISK - REVIEW REQUIRED';
-            const resultColor = isPrediction === 0 ? [76, 175, 80] : [244, 67, 54];
-            
-            // Title
-            doc.setFontSize(24);
-            doc.setTextColor(106, 76, 54);
-            doc.text('LoanShield', 105, 20, { align: 'center' });
-            
-            doc.setFontSize(16);
-            doc.text('Loan Risk Assessment Report', 105, 30, { align: 'center' });
-            
-            // Date
-            doc.setFontSize(10);
-            doc.setTextColor(90, 74, 59);
-            doc.text(`Generated: ${date}`, 105, 38, { align: 'center' });
-            
-            // Line separator
-            doc.setDrawColor(199, 162, 124);
-            doc.setLineWidth(0.5);
-            doc.line(20, 42, 190, 42);
-            
-            // Result Box
-            doc.setFillColor(...resultColor);
-            doc.rect(20, 48, 170, 18, 'F');
-            doc.setFontSize(16);
-            doc.setTextColor(255, 255, 255);
-            doc.text(result, 105, 59, { align: 'center' });
-            
-            // Application Details
-            doc.setFontSize(14);
-            doc.setTextColor(106, 76, 54);
-            doc.text('Application Details', 20, 78);
-            
-            doc.setFontSize(11);
-            doc.setTextColor(90, 74, 59);
-            
-            const details = [
-                ['Age:', document.getElementById('detail-age').textContent],
-                ['Income:', document.getElementById('detail-income').textContent],
-                ['Loan Amount:', document.getElementById('detail-loan').textContent],
-                ['Credit Score:', document.getElementById('detail-credit').textContent],
-                ['DTI Ratio:', document.getElementById('detail-dti').textContent],
-                ['Education:', document.getElementById('detail-education').textContent],
-                ['Employment:', document.getElementById('detail-employment').textContent]
-            ];
-            
-            let yPos = 88;
-            details.forEach(([label, value]) => {
-                doc.setFont(undefined, 'bold');
-                doc.text(label, 25, yPos);
-                doc.setFont(undefined, 'normal');
-                doc.text(value, 80, yPos);
-                yPos += 8;
-            });
-            
-            // Recommendations
-            yPos += 10;
-            doc.setFontSize(14);
-            doc.setTextColor(106, 76, 54);
-            doc.text('Recommendations', 20, yPos);
-            
-            doc.setFontSize(10);
-            doc.setTextColor(90, 74, 59);
-            
-            const recommendations = isPrediction === 0 ? [
-                '• Applicant shows strong financial stability',
-                '• Credit score is in healthy range',
-                '• Income-to-loan ratio is favorable',
-                '• Consider standard approval process'
-            ] : [
-                '• Request additional documentation',
-                '• Consider requiring a co-signer',
-                '• Review recent credit history in detail',
-                '• Possibly offer with higher interest rate'
-            ];
-            
-            yPos += 8;
-            recommendations.forEach(rec => {
-                doc.text(rec, 25, yPos);
-                yPos += 6;
-            });
-            
-            // Footer
-            doc.setFontSize(8);
-            doc.setTextColor(150, 150, 150);
-            doc.text('This report is generated by LoanShield AI-powered risk assessment system.', 105, 280, { align: 'center' });
-            doc.text('For questions, contact support@loanshield.com', 105, 285, { align: 'center' });
-            
-            // Save PDF
-            const filename = `LoanShield_Report_${date.replace(/\//g, '-')}.pdf`;
-            doc.save(filename);
-            
-            // Show success message
-            alert('✅ PDF Report downloaded successfully!');
-        }
-    </script>
+  <script>
+    function downloadPDF() {
 
-    {% include 'footer.html' %}
-    <script src="{{ url_for('static', filename='js/animations.js') }}"></script>
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Header
+      doc.setFillColor(15, 23, 42); /* Keep dark for PDF header look */
+      doc.rect(0, 0, 210, 40, 'F');
+
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(22);
+      doc.text('LoanShield AI Report', 105, 25, { align: 'center' });
+
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(16);
+      doc.text('Official Risk Assessment', 20, 60);
+
+      const isPrediction = {{ prediction | tojson
+    }};
+
+    const status =
+      isPrediction === 0
+        ? 'LOW RISK (APPROVED)'
+        : 'HIGH RISK (WARNING)';
+
+    const statusColor =
+      isPrediction === 0
+        ? [16, 185, 129]
+        : [239, 68, 68];
+
+    doc.setFillColor(...statusColor);
+    doc.rect(20, 70, 170, 15, 'F');
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(12);
+    doc.text(status, 105, 80, { align: 'center' });
+
+    doc.setTextColor(0, 0, 0);
+    doc.setFontSize(14);
+    doc.text('Applicant Data Profile', 20, 100);
+
+    const rows = [
+      ['Age:', document.getElementById('detail-age').textContent],
+      ['Annual Income:', document.getElementById('detail-income').textContent],
+      ['Loan Amount:', document.getElementById('detail-loan').textContent],
+      ['Credit Score:', document.getElementById('detail-credit').textContent],
+      ['DTI Ratio:', document.getElementById('detail-dti').textContent],
+      ['Education:', document.getElementById('detail-education').textContent],
+      ['Employment:', document.getElementById('detail-employment').textContent]
+    ];
+
+    let y = 110;
+
+    doc.setFontSize(11);
+    rows.forEach(([label, value]) => {
+      doc.setFont(undefined, 'bold');
+      doc.text(label, 25, y);
+      doc.setFont(undefined, 'normal');
+      doc.text(value, 80, y);
+      y += 8;
+    });
+
+    // DOWNLOAD
+    doc.save('LoanShield_AI_Report.pdf');
+      }
+  </script>
 </body>
+
 </html>
